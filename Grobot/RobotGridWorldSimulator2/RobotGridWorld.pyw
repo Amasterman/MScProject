@@ -67,7 +67,7 @@ class GridRobotSim(tk.Tk):
         self.frmwt = 622
 
         # Define map size and grid size
-        self.gridspace = 19
+        self.gridspace = 20
         self.mapsize = 30
         self.world = [[None] * (self.mapsize + 3) for i in range(self.mapsize + 3)]  # World map
         # print(self.world) #debug
@@ -83,29 +83,35 @@ class GridRobotSim(tk.Tk):
 
         # Draw canvas to include turtle graphics using the predefined variables for frame hight and width
         self.frame = tk.Frame(master, bg="black", borderwidth=3)
-        self.frame.pack()
+        self.frame.grid(row=0, column=5, columnspan=1, rowspan=1, padx=5, pady=5)
         self.canvas = tk.Canvas(self.frame, height=self.frmht, width=self.frmwt, bg="white")
-        self.canvas.pack()
+        self.canvas.grid(row=0, column=5, columnspan=1, rowspan=1, padx=5, pady=5)
 
         # Buttons under canvas area
         self.newButton = tk.Button(master, text="New Map", command=lambda: self.newWorld())
-        self.newButton.pack(side=tk.LEFT)
+        self.newButton.grid(column=0,row=1)
 
         self.loadButton = tk.Button(master, text="Load Map", command=lambda: self.loadWorld())
-        self.loadButton.pack(side=tk.LEFT)
+        self.loadButton.grid(column=1,row=1)
 
         self.saveButton = tk.Button(master, text="Save Map", command=lambda: self.saveWorld())
-        self.saveButton.pack(side=tk.LEFT)
+        self.saveButton.grid(column=2,row=1)
+
+        self.editButton = tk.Button(master, text="Editor", command=lambda: self.toggleEditMenu())
+        self.editButton.grid(column=3,row=1)
+
+        self.editTest = tk.Button(master, text="Editor", command=lambda: self.toggleEditMenu())
+        self.editTest.grid(column=1,row=2)
 
         self.trailButton = tk.Button(master, text="Toggle Trails", command=lambda: self.toggleTrails())
-        self.trailButton.pack(side=tk.RIGHT)
+        self.trailButton.grid(column=6,row=1)
 
         self.speedSlider = tk.Scale(master, from_=1, to=10, orient=tk.HORIZONTAL, command=self.simSpeed)
         self.speedSlider.set(5)
-        self.speedSlider.pack(side=tk.RIGHT)
+        self.speedSlider.grid(column=7,row=1)
 
         self.speedLabel = tk.Label(text="Speed")
-        self.speedLabel.pack(side=tk.RIGHT)
+        self.speedLabel.grid(column=8,row=1)
 
         # Add dummy turtle as hidden to set up drawing area
         self.robot1 = rbt.RawTurtle(self.canvas)  # changes canvas coords! (0,0) now in middle
@@ -126,6 +132,15 @@ class GridRobotSim(tk.Tk):
         self.timerTrd = Thread(target=self.simtimer)
         self.timerTrd.daemon = True
         self.timerTrd.start()
+
+    #Take in the desierd mapsize and calculate the size of grid need to accomidate
+    def calculateGridspace(self,desieredMapSize):
+        #print(int(self.frmht/desieredMapSize))
+        return int(self.frmht/desieredMapSize)
+
+    #Show or hide edit menu
+    def toggleEditMenu(self):
+        print()
 
     def simtimer(self):
         while True:
@@ -215,10 +230,10 @@ class GridRobotSim(tk.Tk):
 
     def fillGrid(self, x, y):
         tagstr = [str(x) + "u" + str(y), "walls"]
-        # print("**"+tagstr+"**", self.world[x+1][y+1]) # debug
+        #print("**"+tagstr+"**", self.world[x+1][y+1]) # debug
         # CHANGED TO USE CALCULATED VALUES BASED OFF OF GRIDSPACE
-        self.canvas.create_line(self.xtoMap(x) - (self.gridspace * 0.55), self.ytoMap(y),
-                                self.xtoMap(x) + (self.gridspace * 0.4), self.ytoMap(y),
+        self.canvas.create_line(self.xtoMap(x) - (self.gridspace * 0.55), self.ytoMap(y) - (19 - self.gridspace) ,
+                                self.xtoMap(x) + (self.gridspace * 0.4), self.ytoMap(y) - (19 - self.gridspace),
                                 fill="grey", width=self.gridspace-1, tag=tagstr)
 
     def clearGrid(self, x, y):
@@ -227,17 +242,17 @@ class GridRobotSim(tk.Tk):
 
     def xtoMap(self, x=0):
         # CHANGED TO USE CALCULATED VALUES BASED OFF OF GRIDSPACE
-        return int(-self.frmwt // 2 + (self.gridspace * 0.6) + x * self.gridspace)
+        return int((-self.frmwt // 2) + (self.gridspace * 0.6) + (x * self.gridspace))
 
     def ytoMap(self, y=0):
         # CHANGED TO USE CALCULATED VALUES BASED OFF OF GRIDSPACE
-        return int(self.frmwt // 2 - (self.gridspace * 0.6) - y * self.gridspace)
+        return int((self.frmht // 2) - (self.gridspace * 0.6) - (y * self.gridspace))
 
     def maptoX(self, mapx=0):
-        return int((mapx + self.frmwt // 2) // self.gridspace)
+        return int((mapx + (self.frmwt // 2)) // self.gridspace)
 
     def maptoY(self, mapy=0):
-        return int(self.mapsize - (mapy - self.frmht // 2) // -self.gridspace)
+        return int(self.mapsize - (mapy - (self.frmht // 2)) // -self.gridspace)
 
     def newWorld(self):
         # print("NewMAp")
@@ -453,7 +468,7 @@ class GridRobotSim(tk.Tk):
         # Bug fix for Mac - C ontributed by Jamie Hollaway
         tcpSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         msgtext = tk.Label(self.frame, text="Please Wait: Setting up Connection", bg="red")
-        msgtext.pack(side=tk.TOP)
+       # msgtext.grid(column=0,row=0)
         while tcpOk == 0:
             try:
                 tcpSock.bind(("localhost", 9001))
