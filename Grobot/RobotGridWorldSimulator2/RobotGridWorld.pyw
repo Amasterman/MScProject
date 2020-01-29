@@ -72,6 +72,9 @@ class GridRobotSim(tk.Tk):
         self.world = [[None] * (self.mapsize + 3) for i in range(self.mapsize + 3)]  # World map
         # print(self.world) #debug
 
+        #Show edit menu = true
+        self.showEditMenu = False
+
         self.robots = {}  # Mutiple named robots?
         self.shp = []  # Robot shapes list
         self.robotStates = {}  # Internal states of robots
@@ -100,9 +103,6 @@ class GridRobotSim(tk.Tk):
         self.editButton = tk.Button(master, text="Editor", command=lambda: self.toggleEditMenu())
         self.editButton.grid(column=3,row=1)
 
-        self.editTest = tk.Button(master, text="Editor", command=lambda: self.toggleEditMenu())
-        self.editTest.grid(column=1,row=2)
-
         self.trailButton = tk.Button(master, text="Toggle Trails", command=lambda: self.toggleTrails())
         self.trailButton.grid(column=6,row=1)
 
@@ -112,6 +112,13 @@ class GridRobotSim(tk.Tk):
 
         self.speedLabel = tk.Label(text="Speed")
         self.speedLabel.grid(column=8,row=1)
+
+        self.editTest = tk.Button(master, text="Wall", command=lambda: self.toggleEditMenu())
+        self.editTest.grid_forget()
+
+        self.mapSizeSlider = tk.Scale(master, from_=4, to=40, orient=tk.HORIZONTAL)
+        self.mapSizeSlider.set(30)
+        self.mapSizeSlider.grid_forget()
 
         # Add dummy turtle as hidden to set up drawing area
         self.robot1 = rbt.RawTurtle(self.canvas)  # changes canvas coords! (0,0) now in middle
@@ -140,7 +147,15 @@ class GridRobotSim(tk.Tk):
 
     #Show or hide edit menu
     def toggleEditMenu(self):
-        print()
+        if self.showEditMenu:
+            self.editTest.grid_forget()
+            self.mapSizeSlider.grid_forget()
+            self.showEditMenu = False
+        else:
+            self.editTest.grid(column=0, row=2)
+            self.mapSizeSlider.grid(column=7,row=2)
+            self.showEditMenu = True
+
 
     def simtimer(self):
         while True:

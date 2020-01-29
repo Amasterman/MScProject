@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6e96dec6-8d42-4a21-9fc7-d731c507b52a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/ss.map" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/ss.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -113,7 +112,7 @@
       <workItem from="1580321436886" duration="1568000" />
       <workItem from="1580323551137" duration="237000" />
       <workItem from="1580324003480" duration="2219000" />
-      <workItem from="1580330698949" duration="4590000" />
+      <workItem from="1580330698949" duration="5749000" />
     </task>
     <task id="LOCAL-00001" summary="Inital Test Commit">
       <created>1580310130169</created>
@@ -157,7 +156,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580318845994</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="FIxed grid fill location on  diffrently scale worlds&#10;Changed to .grid to improve positioning">
+      <created>1580335729043</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1580335729043</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -170,7 +176,8 @@
     <MESSAGE value="Added Grobot simulator files to repo" />
     <MESSAGE value="Installed correct modules for Grobot and cleaned up slight code instances" />
     <MESSAGE value="First step of changing RobotGridWorld.pyw to have a dynamic range of sizes. &#10;Added inital work to encode map, frame and square size to the save file" />
-    <option name="LAST_COMMIT_MESSAGE" value="First step of changing RobotGridWorld.pyw to have a dynamic range of sizes. &#10;Added inital work to encode map, frame and square size to the save file" />
+    <MESSAGE value="FIxed grid fill location on  diffrently scale worlds&#10;Changed to .grid to improve positioning" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIxed grid fill location on  diffrently scale worlds&#10;Changed to .grid to improve positioning" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="189" width="806" height="675" key="#Inspections" timestamp="1580311266164">
@@ -185,10 +192,10 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="705" y="386" width="506" height="280" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1053@0.0.1920.1053" timestamp="1580311709427" />
-    <state x="560" y="128" width="796" height="797" key="CommitChangelistDialog2" timestamp="1580318845863">
+    <state x="560" y="128" width="796" height="797" key="CommitChangelistDialog2" timestamp="1580335728807">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state x="560" y="128" width="796" height="797" key="CommitChangelistDialog2/0.0.1920.1053@0.0.1920.1053" timestamp="1580318845863" />
+    <state x="560" y="128" width="796" height="797" key="CommitChangelistDialog2/0.0.1920.1053@0.0.1920.1053" timestamp="1580335728807" />
     <state x="185" y="90" width="1542" height="870" key="DiffContextDialog" timestamp="1580310323857">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
@@ -197,22 +204,22 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="740" y="284" width="430" height="482" key="FileChooserDialogImpl/0.0.1920.1053@0.0.1920.1053" timestamp="1580310734055" />
-    <state width="1878" height="115" key="GridCell.Tab.0.bottom" timestamp="1580335671351">
+    <state width="1878" height="115" key="GridCell.Tab.0.bottom" timestamp="1580337553390">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="115" key="GridCell.Tab.0.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1580335671351" />
-    <state width="1878" height="115" key="GridCell.Tab.0.center" timestamp="1580335671350">
+    <state width="1878" height="115" key="GridCell.Tab.0.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1580337553390" />
+    <state width="1878" height="115" key="GridCell.Tab.0.center" timestamp="1580337553389">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="115" key="GridCell.Tab.0.center/0.0.1920.1053@0.0.1920.1053" timestamp="1580335671350" />
-    <state width="1878" height="115" key="GridCell.Tab.0.left" timestamp="1580335671350">
+    <state width="1878" height="115" key="GridCell.Tab.0.center/0.0.1920.1053@0.0.1920.1053" timestamp="1580337553389" />
+    <state width="1878" height="115" key="GridCell.Tab.0.left" timestamp="1580337553389">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="115" key="GridCell.Tab.0.left/0.0.1920.1053@0.0.1920.1053" timestamp="1580335671350" />
-    <state width="1878" height="115" key="GridCell.Tab.0.right" timestamp="1580335671351">
+    <state width="1878" height="115" key="GridCell.Tab.0.left/0.0.1920.1053@0.0.1920.1053" timestamp="1580337553389" />
+    <state width="1878" height="115" key="GridCell.Tab.0.right" timestamp="1580337553389">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="115" key="GridCell.Tab.0.right/0.0.1920.1053@0.0.1920.1053" timestamp="1580335671351" />
+    <state width="1878" height="115" key="GridCell.Tab.0.right/0.0.1920.1053@0.0.1920.1053" timestamp="1580337553389" />
     <state width="1878" height="347" key="GridCell.Tab.1.bottom" timestamp="1580318861543">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
@@ -251,7 +258,7 @@
     <state x="757" y="447" width="405" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1053@0.0.1920.1053" timestamp="1580311987121" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/MScProject$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1580335671343" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
+    <SUITE FILE_PATH="coverage/MScProject$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1580337553381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
     <SUITE FILE_PATH="coverage/MScProject$RemoteControl.coverage" NAME="RemoteControl Coverage Results" MODIFIED="1580311895079" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
   </component>
 </project>
