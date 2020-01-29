@@ -133,14 +133,14 @@ class GridRobotSim(tk.Tk):
         # Work in progress!
         #print("ToggleTrails")# debug
         for robname in self.robots:
-            if self.trails == True:
+            if self.trails:
                 print("OFF")
                 self.robots[robname].penup()
                 self.robots[robname].clear()
             else:
                 print("ON")
                 self.robots[robname].pendown()
-        if self.trails==True:
+        if self.trails:
             self.trails=False
         else:
             self.trails=True
@@ -177,7 +177,7 @@ class GridRobotSim(tk.Tk):
         #print ("World dims = ", len(self.world), len(self.world[0]))#debug
         for ix in range(0,len(self.world)-1):
             for iy in range(0,len(self.world[ix])-1):
-                if self.world[ix+1][iy+1] != None:
+                if self.world[ix + 1][iy + 1] is not None:
                     #print(ix, iy, self.world[ix][iy])# debug
                     self.fillGrid(ix, iy)
                 else:
@@ -188,7 +188,7 @@ class GridRobotSim(tk.Tk):
         x=self.maptoX(mousex)
         y=self.maptoY(mousey)
         #print("EditGrid", mousex, mousey, x, y, self.world[x][y])# Debug
-        if self.world[x+1][y+1] == None:
+        if self.world[x + 1][y + 1] is None:
             # Make wall (etc.?)
             self.fillGrid(x, y)
             self.world[x+1][y+1] = "Wall"
@@ -227,7 +227,7 @@ class GridRobotSim(tk.Tk):
     def saveWorld(self):
         # print("SaveMAp")
         filename = fd.asksaveasfilename(filetypes=[("Map Files","*.map")], initialdir=".")
-        if filename != None:
+        if filename is not None:
             # remove robots from world!
             for robname in list(self.robots.keys()):
                 xpos,ypos=self.getXYpos(robname)
@@ -293,7 +293,7 @@ class GridRobotSim(tk.Tk):
         self.robots[robname].goto(self.xtoMap(posx)-3, self.ytoMap(self.mapsize-posy)+2)
         self.robots[robname].setheading(90)
         self.robots[robname].showturtle()
-        if self.trails == True:
+        if self.trails:
             self.robots[robname].clear()
             self.robots[robname].pendown()
         else:
@@ -310,7 +310,7 @@ class GridRobotSim(tk.Tk):
 
     def moveForward(self, rname):
         if rname in self.robots and self.robotStates[rname]!="Broken":
-            if self.look(rname)[2]==None:# Clear to move
+            if self.look(rname)[2] is None:# Clear to move
                 posx = self.maptoX(self.robots[rname].xcor())
                 posy = self.maptoY(self.robots[rname].ycor())
 
@@ -491,11 +491,11 @@ class GridRobotSim(tk.Tk):
                 #raise #debug. If error just carry on
                 rmsg = "Server Error"
 
-            if rmsg == None:
+            if rmsg is None:
                 rmsg == "None"
             #print(rmsg, type(rmsg))# debug
             # Wait here for step timer
-            while self.wait==True:
+            while self.wait:
                 sleep(0.01)
             cli_sock.send(str(rmsg).encode('utf-8'))
         #print("Connection Closed")# debug

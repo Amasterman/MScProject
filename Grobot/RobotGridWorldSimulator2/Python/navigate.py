@@ -32,10 +32,10 @@ while True:
         try:
                 msg = robot.look()
                 #input("Press RETURN to cont.")
-                if msg[4] == None:
+                if msg[4] is None:
                         robot.right()
                         robot.forward()
-                elif msg[2] == None:
+                elif msg[2] is None:
                         robot.forward()
                 else:
                         robot.left()
