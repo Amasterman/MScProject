@@ -35,6 +35,7 @@ from __future__ import absolute_import, division, print_function
 
 try:
     input = raw_input  # Python 3 style input()
+
 except:
     pass
 
@@ -60,63 +61,87 @@ import atexit
 
 
 class GridRobotSim(tk.Tk):
-    # Just one big class!
     def __init__(self, master=None):
-        # Define Size of white canvas in pixles
-        self.frmht = 622 #Default 622
-        self.frmwt = 622
+
+        # Define Size of white canvas in pixels
+        self.frameHeight = 600  # Default 622
+        self.frameWidth = 600  # Default 622
 
         # Define map size and grid size
-        self.gridspace = 20
-        self.mapsize = 30
-        self.world = [[None] * (self.mapsize + 3) for i in range(self.mapsize + 3)]  # World map
+        self.gridSpace = 20
+        self.mapSize = 30
+        # Define world size and borders
+        self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]  # World map
+
         # print(self.world) #debug
 
-        #Show edit menu = true
+        # Define edit menu variable
         self.showEditMenu = False
 
-        self.robots = {}  # Mutiple named robots?
-        self.shp = []  # Robot shapes list
-        self.robotStates = {}  # Internal states of robots
-        self.trails = False  # Trails off to start with
+        # Define brush variable
+        self.brush = ['disabled','normal','normal','normal']
 
-        # Initalise frame window and name
+        # List of robot names
+        self.robots = {}
+        # Robot shapes list
+        self.shp = []
+        # Internal states of the robot
+        self.robotStates = {}
+        # Trails variable definition
+        self.trails = False
+
+        # Initialise frame window and name
         tk.Tk.__init__(self, master)
-        tk.Tk.title(self, "RoboGridWorld V2")
+        tk.Tk.title(self, "RobotGridWorld V2")
 
-        # Draw canvas to include turtle graphics using the predefined variables for frame hight and width
+        # Draw frame for canvas to be drawn onto
         self.frame = tk.Frame(master, bg="black", borderwidth=3)
         self.frame.grid(row=0, column=5, columnspan=1, rowspan=1, padx=5, pady=5)
-        self.canvas = tk.Canvas(self.frame, height=self.frmht, width=self.frmwt, bg="white")
+
+        # Draw canvas with set frame heights and widths
+        self.canvas = tk.Canvas(self.frame, height=self.frameHeight, width=self.frameWidth, bg="white")
         self.canvas.grid(row=0, column=5, columnspan=1, rowspan=1, padx=5, pady=5)
 
-        # Buttons under canvas area
+        # Buttons under canvas area to the left
         self.newButton = tk.Button(master, text="New Map", command=lambda: self.newWorld())
-        self.newButton.grid(column=0,row=1)
+        self.newButton.grid(column=0, row=1)
 
         self.loadButton = tk.Button(master, text="Load Map", command=lambda: self.loadWorld())
-        self.loadButton.grid(column=1,row=1)
+        self.loadButton.grid(column=1, row=1)
 
         self.saveButton = tk.Button(master, text="Save Map", command=lambda: self.saveWorld())
-        self.saveButton.grid(column=2,row=1)
+        self.saveButton.grid(column=2, row=1)
 
         self.editButton = tk.Button(master, text="Editor", command=lambda: self.toggleEditMenu())
-        self.editButton.grid(column=3,row=1)
+        self.editButton.grid(column=3, row=1)
 
         self.trailButton = tk.Button(master, text="Toggle Trails", command=lambda: self.toggleTrails())
-        self.trailButton.grid(column=6,row=1)
+        self.trailButton.grid(column=4, row=1)
 
+        # Buttons under canvas area to the right
         self.speedSlider = tk.Scale(master, from_=1, to=10, orient=tk.HORIZONTAL, command=self.simSpeed)
         self.speedSlider.set(5)
-        self.speedSlider.grid(column=7,row=1)
+        self.speedSlider.grid(column=7, row=1)
 
         self.speedLabel = tk.Label(text="Speed")
-        self.speedLabel.grid(column=8,row=1)
+        self.speedLabel.grid(column=8, row=1)
 
-        self.editTest = tk.Button(master, text="Wall", command=lambda: self.toggleEditMenu())
-        self.editTest.grid_forget()
+        # Second rank of hidden edit features toggled by editor button
+        self.wallBrush = tk.Button(master, text="Wall", state=self.brush[0], command=lambda: self.setBrush(0))
+        self.wallBrush.grid_forget()
 
-        self.mapSizeSlider = tk.Scale(master, from_=4, to=40, orient=tk.HORIZONTAL)
+        self.goalBrush = tk.Button(master, text="Goal", state=self.brush[1], command=lambda: self.setBrush(1))
+        self.goalBrush.grid_forget()
+
+        self.foodBrush = tk.Button(master, text="Food", state=self.brush[2], command=lambda: self.setBrush(2))
+        self.foodBrush.grid_forget()
+
+        self.waterBrush = tk.Button(master, text="Water", state=self.brush[3], command=lambda: self.setBrush(3))
+        self.waterBrush.grid_forget()
+
+        # Map Size slider that will be hidden aswell
+        self.mapSizeSlider = tk.Scale(master, from_=5, to=50, resolution=5, orient=tk.HORIZONTAL,
+                                      command=self.setMapSize)
         self.mapSizeSlider.set(30)
         self.mapSizeSlider.grid_forget()
 
@@ -128,6 +153,7 @@ class GridRobotSim(tk.Tk):
         self.screen = self.robot1.getscreen()
         self.screen.onclick(self.editGrid, btn=1)  # Mouse left button
 
+        # Draw initial state of world on canvas area
         self.drawWorld()
 
         # Start server for robot programs to connect
@@ -140,23 +166,61 @@ class GridRobotSim(tk.Tk):
         self.timerTrd.daemon = True
         self.timerTrd.start()
 
-    #Take in the desierd mapsize and calculate the size of grid need to accomidate
-    def calculateGridspace(self,desieredMapSize):
-        #print(int(self.frmht/desieredMapSize))
-        return int(self.frmht/desieredMapSize)
+    # Take in the desired mapSize and calculate the size of grid need to accommodate
+    def calculateGridspace(self, targetMapSize):
+        # print(int(self.frameHeight/targetMapSize))
+        return int(self.frameHeight / targetMapSize)
 
-    #Show or hide edit menu
+    # Swap brush to sent value
+    def setBrush(self, value):
+        for i in range(0, len(self.brush)):
+            if i != value:
+                self.brush[i] = 'normal'
+            else:
+                self.brush[i] = 'disabled'
+        self.disableBrushButton()
+
+    # Disable selected brush button
+    def disableBrushButton(self):
+        self.wallBrush.config(state=self.brush[0])
+        self.goalBrush.config(state=self.brush[1])
+        self.foodBrush.config(state=self.brush[2])
+        self.waterBrush.config(state=self.brush[3])
+
+    # Show or hide edit menu features using grid_forget to retain information
     def toggleEditMenu(self):
+        print(self.world[1][2])
         if self.showEditMenu:
-            self.editTest.grid_forget()
+            self.wallBrush.grid_forget()
+            self.goalBrush.grid_forget()
+            self.foodBrush.grid_forget()
+            self.waterBrush.grid_forget()
+
             self.mapSizeSlider.grid_forget()
             self.showEditMenu = False
+
         else:
-            self.editTest.grid(column=0, row=2)
-            self.mapSizeSlider.grid(column=7,row=2)
+            self.wallBrush.grid(column=0, row=2)
+            self.goalBrush.grid(column=1, row=2)
+            self.foodBrush.grid(column=2, row=2)
+            self.waterBrush.grid(column=3, row=2)
+
+            self.disableBrushButton()
+
+            self.mapSizeSlider.grid(column=7, row=2)
             self.showEditMenu = True
 
+    # When the slider changes update grid space, map size and world
+    def setMapSize(self, event):
+        if self.mapSizeSlider.get() != self.mapSize:
+            self.gridSpace = self.calculateGridspace(self.mapSizeSlider.get())
+            self.mapSize = self.mapSizeSlider.get()
+            self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]
+            # TODO add scaling without clearing previous maps
+        # Draw new world
+        self.drawWorld()
 
+    # Update the simulation based on the timer
     def simtimer(self):
         while True:
             self.wait = True
@@ -169,10 +233,12 @@ class GridRobotSim(tk.Tk):
             self.update_idletasks()
             # print(self.wait, self.delay)
 
+    # Set the simulation speed when speed slider changed
     def simSpeed(self, event):
         self.delay = self.speedSlider.get()
         # print(self.delay)
 
+    # Toggle Trails following robots based on button
     def toggleTrails(self):
         # Work in progress!
         # print("ToggleTrails")# debug
@@ -189,91 +255,140 @@ class GridRobotSim(tk.Tk):
         else:
             self.trails = True
 
+    # Draws the grid and labels XYaxis lines, labels
     def drawWorld(self):
-        # Draws the grid and labels
-        # XYaxis lines, labels
 
-        #Clear canvas and reset count
+        # Clear canvas and reset count
         self.canvas.delete("all")
         count = 0
 
         # Vertical lines
-        for i in range(-self.frmht // 2, self.frmht // 2 - 1, self.gridspace):
-            self.canvas.create_line(i, self.frmht // 2, i, -self.frmwt // 2, dash=(2, 4))
-            self.canvas.create_text(i + 10, self.frmht // 2 - 10, text=str(count), font=("courier", 6), fill="red")
+        for i in range(-self.frameHeight // 2, self.frameHeight // 2 - 1, self.gridSpace):
+            self.canvas.create_line(i, self.frameHeight // 2, i, -self.frameWidth // 2, dash=(2, 4))
+            self.canvas.create_text(i + 10, self.frameHeight // 2 - 10, text=str(count), font=("courier", 6),
+                                    fill="red")
             count += 1
 
         # Horizontal lines
-        count = self.frmht // self.gridspace
-        for i in range(-self.frmwt // 2, self.frmwt // 2 - 1, self.gridspace):
-            self.canvas.create_line(-self.frmwt // 2, i, self.frmht // 2, i, dash=(2, 4))
-            self.canvas.create_text(-self.frmwt // 2 + 10, i + 12, text=str(int(count - 1)), font=("courier", 6),
+        count = self.frameHeight // self.gridSpace
+        for i in range(-self.frameWidth // 2, self.frameWidth // 2 - 1, self.gridSpace):
+            self.canvas.create_line(-self.frameWidth // 2, i, self.frameHeight // 2, i, dash=(2, 4))
+            self.canvas.create_text(-self.frameWidth // 2 + 10, i + 12, text=str(int(count - 1)), font=("courier", 6),
                                     fill="red")
             count -= 1
 
-        # Set boundary walls: 0,0 to 31,31
-        mapsize = len(self.world) - 1
-        # print(mapsize) # debug
-        for n in range(0, mapsize):
+        # Set boundary walls: 0,0 to mapSize,mapSize
+        mapSize = len(self.world) - 1
+        # print(mapSize) # debug
+        for n in range(0, mapSize):
             self.world[0][n] = "Wall"
-            self.world[mapsize][n] = "Wall"
+            self.world[mapSize][n] = "Wall"
             self.world[n][0] = "Wall"
-            self.world[n][mapsize] = "Wall"
-        self.world[mapsize][mapsize] = "Wall"
+            self.world[n][mapSize] = "Wall"
+        self.world[mapSize][mapSize] = "Wall"
 
         # Draw filled grids squares
         # print ("World dims = ", len(self.world), len(self.world[0]))#debug
         for ix in range(0, len(self.world) - 1):
             for iy in range(0, len(self.world[ix]) - 1):
                 if self.world[ix + 1][iy + 1] is not None:
-                    # print(ix, iy, self.world[ix][iy])# debug
-                    self.fillGrid(ix, iy)
+                    #print(ix, iy, self.world[ix][iy])# debug
+                    if (self.world[ix+1][iy+1] == "Wall"):
+                        self.fillGridWall(ix, iy)
+                    elif (self.world[ix+1][iy+1] == "Goal"):
+                        self.fillGridGoal(ix,iy)
+                    elif (self.world[ix+1][iy+1] == "Food"):
+                        self.fillGridFood(ix,iy)
+                    elif (self.world[ix+1][iy+1] == "Water"):
+                        self.fillGridWater(ix,iy)
                 else:
                     self.clearGrid(ix, iy)
 
+    # Take xy mouse coords and translate into map values
     def editGrid(self, mousex, mousey):
         x = self.maptoX(mousex)
         y = self.maptoY(mousey)
         # print("EditGrid", mousex, mousey, x, y, self.world[x][y])# Debug
         if self.world[x + 1][y + 1] is None:
             # Make wall (etc.?)
-            self.fillGrid(x, y)
-            self.world[x + 1][y + 1] = "Wall"
+            if self.brush[0] == 'disabled':
+                self.fillGridWall(x, y)
+                self.world[x + 1][y + 1] = "Wall"
+            elif self.brush[1] == 'disabled':
+                self.fillGridGoal(x, y)
+                self.world[x + 1][y + 1] = "Goal"
+            elif self.brush[2] == 'disabled':
+                self.fillGridFood(x, y)
+                self.world[x + 1][y + 1] = "Food"
+            elif self.brush[3] == 'disabled':
+                self.fillGridWater(x, y)
+                self.world[x + 1][y + 1] = "Water"
+
         else:  # Clear grid square
             self.clearGrid(x, y)
             self.world[x + 1][y + 1] = None
 
-    def fillGrid(self, x, y):
-        tagstr = [str(x) + "u" + str(y), "walls"]
-        #print("**"+tagstr+"**", self.world[x+1][y+1]) # debug
-        # CHANGED TO USE CALCULATED VALUES BASED OFF OF GRIDSPACE
-        self.canvas.create_line(self.xtoMap(x) - (self.gridspace * 0.55), self.ytoMap(y) - (19 - self.gridspace) ,
-                                self.xtoMap(x) + (self.gridspace * 0.4), self.ytoMap(y) - (19 - self.gridspace),
-                                fill="grey", width=self.gridspace-1, tag=tagstr)
+    # Fill grid areas with scaled size to grid
+    def fillGridWall(self, x, y):
+        tagStr = [str(x) + "u" + str(y), "walls"]
+        # print("**"+tagStr+"**", self.world[x+1][y+1]) # debug
+        # Scale size of box based on grid size
+        self.canvas.create_rectangle(self.xtoMap(x) - (self.gridSpace / 2), self.ytoMap(y) - (self.gridSpace / 2) - 1,
+                                     self.xtoMap(x) + (self.gridSpace / 2), self.ytoMap(y) + (self.gridSpace / 2) - 1,
+                                     fill="grey", tag=tagStr)
 
+    def fillGridGoal(self, x, y):
+        tagStr = [str(x) + "u" + str(y), "goals"]
+        # print("**"+tagStr+"**", self.world[x+1][y+1]) # debug
+        # Scale size of box based on grid size
+        self.canvas.create_rectangle(self.xtoMap(x) - (self.gridSpace / 2), self.ytoMap(y) - (self.gridSpace / 2) - 1,
+                                     self.xtoMap(x) + (self.gridSpace / 2), self.ytoMap(y) + (self.gridSpace / 2) - 1,
+                                     fill="green", tag=tagStr)
+
+    def fillGridFood(self, x, y):
+        tagStr = [str(x) + "u" + str(y), "foods"]
+        # print("**"+tagStr+"**", self.world[x+1][y+1]) # debug
+        # Scale size of box based on grid size
+        self.canvas.create_rectangle(self.xtoMap(x) - (self.gridSpace / 2), self.ytoMap(y) - (self.gridSpace / 2) - 1,
+                                     self.xtoMap(x) + (self.gridSpace / 2), self.ytoMap(y) + (self.gridSpace / 2) - 1,
+                                     fill="orange", tag=tagStr)
+
+    def fillGridWater(self, x, y):
+        tagStr = [str(x) + "u" + str(y), "waters"]
+        # print("**"+tagStr+"**", self.world[x+1][y+1]) # debug
+        # Scale size of box based on grid size
+        self.canvas.create_rectangle(self.xtoMap(x) - (self.gridSpace / 2), self.ytoMap(y) - (self.gridSpace / 2) - 1,
+                                     self.xtoMap(x) + (self.gridSpace / 2), self.ytoMap(y) + (self.gridSpace / 2) - 1,
+                                     fill="blue", tag=tagStr)
+
+    # Clear all values from the grid
     def clearGrid(self, x, y):
-        tagstr = str(x) + "u" + str(y)
-        self.canvas.delete(tagstr)
+        tagStr = str(x) + "u" + str(y)
+        self.canvas.delete(tagStr)
 
+    # Take x value and map to grid x
     def xtoMap(self, x=0):
-        # CHANGED TO USE CALCULATED VALUES BASED OFF OF GRIDSPACE
-        return int((-self.frmwt // 2) + (self.gridspace * 0.6) + (x * self.gridspace))
+        return int((-self.frameWidth // 2) + (self.gridSpace / 2) + (x * self.gridSpace))  # (self.gridSpace * 0.6)
 
+    # Take y value and map to grid y
     def ytoMap(self, y=0):
-        # CHANGED TO USE CALCULATED VALUES BASED OFF OF GRIDSPACE
-        return int((self.frmht // 2) - (self.gridspace * 0.6) - (y * self.gridspace))
+        return int((self.frameHeight // 2) - (self.gridSpace / 2) - (y * self.gridSpace))  # (self.gridSpace * 0.6)
 
+    # Take grid x value and map to x
     def maptoX(self, mapx=0):
-        return int((mapx + (self.frmwt // 2)) // self.gridspace)
+        return int((mapx + (self.frameWidth // 2)) // self.gridSpace)
 
+    # Take grid y value and map to y
     def maptoY(self, mapy=0):
-        return int(self.mapsize - (mapy - (self.frmht // 2)) // -self.gridspace)
+        return int((mapy + (self.frameHeight // 2)) // self.gridSpace)
 
+    # Reinitialise world as empty world
     def newWorld(self):
         # print("NewMAp")
-        self.world = [[None] * (self.mapsize + 3) for i in range(self.mapsize + 3)]  # World map
+        self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]  # World map
         self.drawWorld()
 
+    # Compress list of objects using pickle and save as .map file
     def saveWorld(self):
         # print("SaveMAp")
         filename = fd.asksaveasfilename(filetypes=[("Map Files", "*.map")], initialdir=".")
@@ -286,9 +401,10 @@ class GridRobotSim(tk.Tk):
             if filename[-4:] != ".map": filename += ".map"
 
             # Create list of objects or values to be pickled and saved
-            data = {0: self.world, 1: self.frmht}
-            pickle.dump(data, open(filename, 'wb'), 2)  # Protocol 2 for python 2 compatilbility
+            data = {0: self.world, 1: self.mapSize}
+            pickle.dump(data, open(filename, 'wb'), 2)  # Protocol 2 for python 2 compatibility
 
+    # Uncompress list of objects previously pickled
     def loadWorld(self):
         filename = fd.askopenfilename(filetypes=[("Map Files", "*.map")], initialdir="./Maps/")
         # print(filename)# debug
@@ -296,23 +412,29 @@ class GridRobotSim(tk.Tk):
             if filename[-4:] != ".map": filename += ".map"
 
             # UnPickel list of saved objects
-            newworld = pickle.load(open(filename, 'rb'))
+            newWorld = pickle.load(open(filename, 'rb'))
 
-            if len(newworld[0]) < 32:  # Old style or part map
-                # map onto new style map
-                # print("Old Style Map")
-                self.world = [[None] * (self.mapsize + 3) for i in range(self.mapsize + 3)]  # Clear World map
-                dx = 1
-                for ix in newworld[0]:
-                    dy = 1
-                    for iy in ix:
-                        # print(dx, dy)#debug
-                        self.world[dx][dy] = iy
-                        dy += 1
-                    dx += 1
+            if type(newWorld[1]) == int:
+                # V3 Map check
+                self.mapSizeSlider.set(newWorld[1])
+                self.setMapSize(newWorld[1])
+                self.world = newWorld[0]
             else:
-                print("New Style Map")#debug
-                self.world = newworld[0]
+                if len(newWorld) < 32:  # V1 or part map
+                    # map onto new map
+                    # print("V1 Map")
+                    self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]  # Clear World map
+                    dx = 1
+                    for ix in newWorld:
+                        dy = 1
+                        for iy in ix:
+                            # print(dx, dy)#debug
+                            self.world[dx][dy] = iy
+                            dy += 1
+                        dx += 1
+                else:
+                    # print("V2 Map")  # debug
+                    self.world = newWorld
             self.drawWorld()
 
     def newRobot(self, robname="None", posx=1, posy=1, colour="red", rshape="None"):
@@ -347,9 +469,10 @@ class GridRobotSim(tk.Tk):
         self.robots[robname].penup()
         self.robots[robname].shape(robname + "shape")
         self.robots[robname].speed(0)
-        self.robots[robname].goto(self.xtoMap(posx) - 3, self.ytoMap(self.mapsize - posy) + 2)
+        self.robots[robname].goto(self.xtoMap(posx) - 3, self.ytoMap(self.mapSize - posy) + 2)
         self.robots[robname].setheading(90)
         self.robots[robname].showturtle()
+        self.robot[robname].posy = self.robot[robname].posy + 1 #Todo Find out why this was needed
         if self.trails:
             self.robots[robname].clear()
             self.robots[robname].pendown()
@@ -411,7 +534,7 @@ class GridRobotSim(tk.Tk):
                 posx = self.maptoX(self.robots[rname].xcor())
                 posy = self.maptoY(self.robots[rname].ycor())
                 heading = int(self.robots[rname].heading())
-                # print(rname, posx, posy, heading) # debug
+                print(rname, posx, posy, heading) # debug
 
                 if heading == 0 and posx < 31:  # East
                     val = [self.world[posx + 1][posy + 2], self.world[posx + 2][posy + 2],
@@ -483,7 +606,7 @@ class GridRobotSim(tk.Tk):
         # Bug fix for Mac - C ontributed by Jamie Hollaway
         tcpSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         msgtext = tk.Label(self.frame, text="Please Wait: Setting up Connection", bg="red")
-       # msgtext.grid(column=0,row=0)
+        # msgtext.grid(column=0,row=0)
         while tcpOk == 0:
             try:
                 tcpSock.bind(("localhost", 9001))
