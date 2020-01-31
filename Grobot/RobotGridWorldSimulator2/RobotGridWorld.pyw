@@ -79,7 +79,7 @@ class GridRobotSim(tk.Tk):
         self.showEditMenu = False
 
         # Define brush variable
-        self.brush = ['disabled','normal','normal','normal']
+        self.brush = ['disabled', 'normal', 'normal', 'normal']
 
         # List of robot names
         self.robots = {}
@@ -93,6 +93,9 @@ class GridRobotSim(tk.Tk):
         # Initialise frame window and name
         tk.Tk.__init__(self, master)
         tk.Tk.title(self, "RobotGridWorld V2")
+
+        # Initalise drone target array
+        self.drone = [[0, 0, 0, 0, True, False]]
 
         # Draw frame for canvas to be drawn onto
         self.frame = tk.Frame(master, bg="black", borderwidth=3)
@@ -166,49 +169,12 @@ class GridRobotSim(tk.Tk):
         self.timerTrd.daemon = True
         self.timerTrd.start()
 
+    # -------------------------------- Mapping ---------------------------------------------------
+
     # Take in the desired mapSize and calculate the size of grid need to accommodate
     def calculateGridspace(self, targetMapSize):
         # print(int(self.frameHeight/targetMapSize))
         return int(self.frameHeight / targetMapSize)
-
-    # Swap brush to sent value
-    def setBrush(self, value):
-        for i in range(0, len(self.brush)):
-            if i != value:
-                self.brush[i] = 'normal'
-            else:
-                self.brush[i] = 'disabled'
-        self.disableBrushButton()
-
-    # Disable selected brush button
-    def disableBrushButton(self):
-        self.wallBrush.config(state=self.brush[0])
-        self.goalBrush.config(state=self.brush[1])
-        self.foodBrush.config(state=self.brush[2])
-        self.waterBrush.config(state=self.brush[3])
-
-    # Show or hide edit menu features using grid_forget to retain information
-    def toggleEditMenu(self):
-        print(self.world[1][2])
-        if self.showEditMenu:
-            self.wallBrush.grid_forget()
-            self.goalBrush.grid_forget()
-            self.foodBrush.grid_forget()
-            self.waterBrush.grid_forget()
-
-            self.mapSizeSlider.grid_forget()
-            self.showEditMenu = False
-
-        else:
-            self.wallBrush.grid(column=0, row=2)
-            self.goalBrush.grid(column=1, row=2)
-            self.foodBrush.grid(column=2, row=2)
-            self.waterBrush.grid(column=3, row=2)
-
-            self.disableBrushButton()
-
-            self.mapSizeSlider.grid(column=7, row=2)
-            self.showEditMenu = True
 
     # When the slider changes update grid space, map size and world
     def setMapSize(self, event):
@@ -220,42 +186,8 @@ class GridRobotSim(tk.Tk):
         # Draw new world
         self.drawWorld()
 
-    # Update the simulation based on the timer
-    def simtimer(self):
-        while True:
-            self.wait = True
-            sleep(0.3 - self.delay / 50)
-            self.wait = False
-            sleep(0.05)
-            # Bug fix - Jamie Hollaway
-            # Stops window freezing when not in focus
-            self.update()
-            self.update_idletasks()
-            # print(self.wait, self.delay)
+        # Draws the grid and labels XYaxis lines, labels
 
-    # Set the simulation speed when speed slider changed
-    def simSpeed(self, event):
-        self.delay = self.speedSlider.get()
-        # print(self.delay)
-
-    # Toggle Trails following robots based on button
-    def toggleTrails(self):
-        # Work in progress!
-        # print("ToggleTrails")# debug
-        for robname in self.robots:
-            if self.trails:
-                print("OFF")
-                self.robots[robname].penup()
-                self.robots[robname].clear()
-            else:
-                print("ON")
-                self.robots[robname].pendown()
-        if self.trails:
-            self.trails = False
-        else:
-            self.trails = True
-
-    # Draws the grid and labels XYaxis lines, labels
     def drawWorld(self):
 
         # Clear canvas and reset count
@@ -292,15 +224,15 @@ class GridRobotSim(tk.Tk):
         for ix in range(0, len(self.world) - 1):
             for iy in range(0, len(self.world[ix]) - 1):
                 if self.world[ix + 1][iy + 1] is not None:
-                    #print(ix, iy, self.world[ix][iy])# debug
-                    if (self.world[ix+1][iy+1] == "Wall"):
+                    # print(ix, iy, self.world[ix][iy])# debug
+                    if (self.world[ix + 1][iy + 1] == "Wall"):
                         self.fillGridWall(ix, iy)
-                    elif (self.world[ix+1][iy+1] == "Goal"):
-                        self.fillGridGoal(ix,iy)
-                    elif (self.world[ix+1][iy+1] == "Food"):
-                        self.fillGridFood(ix,iy)
-                    elif (self.world[ix+1][iy+1] == "Water"):
-                        self.fillGridWater(ix,iy)
+                    elif (self.world[ix + 1][iy + 1] == "Goal"):
+                        self.fillGridGoal(ix, iy)
+                    elif (self.world[ix + 1][iy + 1] == "Food"):
+                        self.fillGridFood(ix, iy)
+                    elif (self.world[ix + 1][iy + 1] == "Water"):
+                        self.fillGridWater(ix, iy)
                 else:
                     self.clearGrid(ix, iy)
 
@@ -388,6 +320,83 @@ class GridRobotSim(tk.Tk):
         self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]  # World map
         self.drawWorld()
 
+    # ------------------------------ UI Frame ---------------------------------------------------------
+
+    # Swap brush to sent value
+    def setBrush(self, value):
+        for i in range(0, len(self.brush)):
+            if i != value:
+                self.brush[i] = 'normal'
+            else:
+                self.brush[i] = 'disabled'
+        self.disableBrushButton()
+
+    # Disable selected brush button
+    def disableBrushButton(self):
+        self.wallBrush.config(state=self.brush[0])
+        self.goalBrush.config(state=self.brush[1])
+        self.foodBrush.config(state=self.brush[2])
+        self.waterBrush.config(state=self.brush[3])
+
+    # Show or hide edit menu features using grid_forget to retain information
+    def toggleEditMenu(self):
+        if self.showEditMenu:
+            self.wallBrush.grid_forget()
+            self.goalBrush.grid_forget()
+            self.foodBrush.grid_forget()
+            self.waterBrush.grid_forget()
+
+            self.mapSizeSlider.grid_forget()
+            self.showEditMenu = False
+
+        else:
+            self.wallBrush.grid(column=0, row=2)
+            self.goalBrush.grid(column=1, row=2)
+            self.foodBrush.grid(column=2, row=2)
+            self.waterBrush.grid(column=3, row=2)
+
+            self.disableBrushButton()
+
+            self.mapSizeSlider.grid(column=7, row=2)
+            self.showEditMenu = True
+
+    # Update the simulation based on the timer
+    def simtimer(self):
+        while True:
+            self.wait = True
+            sleep(0.3 - self.delay / 50)
+            self.wait = False
+            sleep(0.05)
+            # Bug fix - Jamie Hollaway
+            # Stops window freezing when not in focus
+            self.update()
+            self.update_idletasks()
+            # print(self.wait, self.delay)
+
+    # Set the simulation speed when speed slider changed
+    def simSpeed(self, event):
+        self.delay = self.speedSlider.get()
+        # print(self.delay)
+
+    # Toggle Trails following robots based on button
+    def toggleTrails(self):
+        # Work in progress!
+        # print("ToggleTrails")# debug
+        for robname in self.robots:
+            if self.trails:
+                print("OFF")
+                self.robots[robname].penup()
+                self.robots[robname].clear()
+            else:
+                print("ON")
+                self.robots[robname].pendown()
+        if self.trails:
+            self.trails = False
+        else:
+            self.trails = True
+
+    # ------------------------- Save Load --------------------------------------------------------
+
     # Compress list of objects using pickle and save as .map file
     def saveWorld(self):
         # print("SaveMAp")
@@ -437,6 +446,8 @@ class GridRobotSim(tk.Tk):
                     self.world = newWorld
             self.drawWorld()
 
+    # -------------------------------- Robot -----------------------------------------------------
+
     def newRobot(self, robname="None", posx=1, posy=1, colour="red", rshape="None"):
         if robname == "None":
             # create/use Anonymous robot. Can only do one!
@@ -452,6 +463,7 @@ class GridRobotSim(tk.Tk):
             # Otherwise use standard robot shape
             self.shp.append(rbt.Shape("compound"))
             # print(self.shp, len(self.shp)-1)# debug
+            # TODO Scale images based on size of grid
             poly1 = ((0, 0), (10, -5), (0, 10), (-10, -5))
             self.shp[len(self.shp) - 1].addcomponent(poly1, colour, "black")
             poly2 = ((0, 0), (10, -5), (-10, -5))
@@ -472,7 +484,7 @@ class GridRobotSim(tk.Tk):
         self.robots[robname].goto(self.xtoMap(posx) - 3, self.ytoMap(self.mapSize - posy) + 2)
         self.robots[robname].setheading(90)
         self.robots[robname].showturtle()
-        self.robot[robname].posy = self.robot[robname].posy + 1 #Todo Find out why this was needed
+        self.robot[robname].posy = self.robot[robname].posy + 1  # todo findout what happend
         if self.trails:
             self.robots[robname].clear()
             self.robots[robname].pendown()
@@ -534,7 +546,7 @@ class GridRobotSim(tk.Tk):
                 posx = self.maptoX(self.robots[rname].xcor())
                 posy = self.maptoY(self.robots[rname].ycor())
                 heading = int(self.robots[rname].heading())
-                print(rname, posx, posy, heading) # debug
+                print(rname, posx, posy, heading)  # debug
 
                 if heading == 0 and posx < 31:  # East
                     val = [self.world[posx + 1][posy + 2], self.world[posx + 2][posy + 2],
@@ -584,6 +596,51 @@ class GridRobotSim(tk.Tk):
             else:
                 return ["Broken", "Broken", "Broken", "Broken", "Broken"]
         return "Robot name not found"
+
+    # --------------------------------- Drones -------------------------------------------------
+
+    def newDrone(self, xpos, ypos, loopx, loopy):
+        if self.checkPath(xpos, ypos, loopx, loopy):
+            name = self.generateDroneName()
+            self.drone[int(name[5:])][0] = xpos
+            self.drone[int(name[5:])][1] = ypos
+            self.drone[int(name[5:])][2] = loopx
+            self.drone[int(name[5:])][3] = loopy
+            self.drone[int(name[5:])][4] = True
+            self.drone[int(name[5:])][5] = True
+
+        # Message
+    # TODO load nad run drones
+    # def runDrones(self):
+    #     for robname in list(self.robot.keys()):
+    #         if robname[:5] == "Drone":
+    #             if self.drone[int(robname[5:])][4]:
+    #
+
+    def generateDroneName(self):
+        count = 0
+        for robname in list(self.robots.keys()):
+            if robname[:5] == "Drone":
+                count += 1
+        return "Drone" + str(count)
+
+    def checkPath(self, xpos, ypos, loopx, loopy):
+
+        for i in range(xpos, loopx):
+            if self.world[i][ypos] is not None:
+                return False
+            if self.world[i][loopy] is not None:
+                return False
+
+        for j in range(ypos,loopy):
+            if self.world[xpos][j] is not None:
+                return False
+            if self.world[loopx][i] is not None:
+                return False
+
+        return True
+
+    # --------------------------------- TCP Server ---------------------------------------------
 
     def tcpServer(self):
         """
