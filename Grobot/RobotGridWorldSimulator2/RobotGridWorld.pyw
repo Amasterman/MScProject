@@ -77,7 +77,7 @@ class GridRobotSim(tk.Tk):
         # print(self.world) #debug
 
         # Define edit menu variable
-        self.showEditMenu = False
+        self.showEditMenu = True
 
         # Define brush variable
         self.brush = ['disabled', 'normal', 'normal', 'normal', 'normal']
@@ -184,7 +184,7 @@ class GridRobotSim(tk.Tk):
         self.timerTrd.daemon = True
         self.timerTrd.start()
 
-    # -------------------------------- Mapping ---------------------------------------------------
+# -------------------------------- Mapping ---------------------------------------------------
 
     # Take in the desired mapSize and calculate the size of grid need to accommodate
     def calculateGridspace(self, targetMapSize):
@@ -332,90 +332,131 @@ class GridRobotSim(tk.Tk):
             # Change to end co-ords
             self.droneBrushState = True
 
-    # Fill grid areas with scaled size to grid
+    # Fill grid areas with scaled size to grid rectangles
     def fillGridWall(self, x, y):
-        tagStr = [str(x) + "u" + str(y), "walls"]
-        # print("**"+tagStr+"**", self.world[x+1][y+1]) # debug
-        # Scale size of box based on grid size
-        self.canvas.create_rectangle(self.xtoMap(x) - (self.gridSpace / 2), self.ytoMap(y) - (self.gridSpace / 2) - 1,
-                                     self.xtoMap(x) + (self.gridSpace / 2), self.ytoMap(y) + (self.gridSpace / 2) - 1,
-                                     fill="grey", tag=tagStr)
 
+        # Pass correct colour and tg identifier to fillGrid
+        self.fillGrid(x, y, "grey", "walls")
+
+    # Fill grid areas with scaled size to grid rectangles
     def fillGridGoal(self, x, y):
-        tagStr = [str(x) + "u" + str(y), "goals"]
-        # print("**"+tagStr+"**", self.world[x+1][y+1]) # debug
-        # Scale size of box based on grid size
-        self.canvas.create_rectangle(self.xtoMap(x) - (self.gridSpace / 2), self.ytoMap(y) - (self.gridSpace / 2) - 1,
-                                     self.xtoMap(x) + (self.gridSpace / 2), self.ytoMap(y) + (self.gridSpace / 2) - 1,
-                                     fill="green", tag=tagStr)
 
+        # Pass correct colour and tg identifier to fillGrid
+        self.fillGrid(x, y, "green", "goals")
+
+    # Fill grid areas with scaled size to grid rectangles
     def fillGridFood(self, x, y):
-        tagStr = [str(x) + "u" + str(y), "foods"]
-        # print("**"+tagStr+"**", self.world[x+1][y+1]) # debug
-        # Scale size of box based on grid size
-        self.canvas.create_rectangle(self.xtoMap(x) - (self.gridSpace / 2), self.ytoMap(y) - (self.gridSpace / 2) - 1,
-                                     self.xtoMap(x) + (self.gridSpace / 2), self.ytoMap(y) + (self.gridSpace / 2) - 1,
-                                     fill="orange", tag=tagStr)
 
+        # Pass correct colour and tg identifier to fillGrid
+        self.fillGrid(x, y, "orange", "foods")
+
+    # Fill grid areas with scaled size to grid rectangles
     def fillGridWater(self, x, y):
-        tagStr = [str(x) + "u" + str(y), "waters"]
-        # print("**"+tagStr+"**", self.world[x+1][y+1]) # debug
+
+        # Pass correct colour and tg identifier to fillGrid
+        self.fillGrid(x, y, "blue", "waters")
+
+    # Add colored rectangles to the grid and add a tag
+    def fillGrid(self, x, y, color, tag):
+
+        # Add to the tag string
+        tagStr = [str(x) + "u" + str(y), tag]
+
         # Scale size of box based on grid size
         self.canvas.create_rectangle(self.xtoMap(x) - (self.gridSpace / 2), self.ytoMap(y) - (self.gridSpace / 2) - 1,
                                      self.xtoMap(x) + (self.gridSpace / 2), self.ytoMap(y) + (self.gridSpace / 2) - 1,
-                                     fill="blue", tag=tagStr)
+                                     fill=color, tag=tagStr)
 
     # Clear all values from the grid
     def clearGrid(self, x, y):
+
         tagStr = str(x) + "u" + str(y)
         self.canvas.delete(tagStr)
 
     # Take x value and map to grid x
     def xtoMap(self, x=0):
-        return int((-self.frameWidth // 2) + (self.gridSpace / 2) + (x * self.gridSpace))  # (self.gridSpace * 0.6)
+
+        # Find right side edge, Add half to get to the center of the square and then add amount of squares to move to
+        # the right
+        return int((-self.frameWidth // 2) + (self.gridSpace / 2) + (x * self.gridSpace))
 
     # Take y value and map to grid y
+
     def ytoMap(self, y=0):
-        return int((self.frameHeight // 2) - (self.gridSpace / 2) - (y * self.gridSpace))  # (self.gridSpace * 0.6)
+
+        # Find bottom side edge, Subtract half to get to the center of the square and then subtract amount of squares to
+        # move up
+        return int((self.frameHeight // 2) - (self.gridSpace / 2) - (y * self.gridSpace))
 
     # Take grid x value and map to x
     def maptoX(self, mapx=0):
+        # TODO Explain these
         return int((mapx + (self.frameWidth // 2)) // self.gridSpace)
 
     # Take grid y value and map to y
     def maptoY(self, mapy=0):
+
+        # TODO Explain these
         return int((mapy + (self.frameHeight // 2)) // self.gridSpace)
 
     # Reinitialise world as empty world
     def newWorld(self):
+
         # print("NewMAp")
         self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]  # World map
+
         # Reset drone values
         self.drone = [[0, 0, 0, 0, True, False]]
         self.robots.clear()
+
+        # Redraw world
         self.drawWorld()
 
-    # ------------------------------ UI Frame ---------------------------------------------------------
+# ------------------------------ UI Frame ---------------------------------------------------------
 
-    # Swap brush to sent value
+    # Change the Brush array to only contain disabled on selected brush
     def setBrush(self, value):
+
         for i in range(0, len(self.brush)):
             if i != value:
+
+                # reset other entries in the array
                 self.brush[i] = 'normal'
+
             else:
+
+                # Set selected brush to disabled
                 self.brush[i] = 'disabled'
+
+        # Update the states of the buttons
         self.disableBrushButton()
+
+        # Update the display message with the drone brush info
         self.displayDroneBrushMsg()
 
     def displayDroneBrushMsg(self):
+
+        # If brush is selected
         if self.brush[4] == 'disabled':
+
+            # Start or end co-ords?
             if self.droneBrushState:
+
+                # Waiting for starting co-ords
                 self.setErrorMsg("Choose starting co-ords")
+
             else:
+
+                # Waiting for the end co=ords
                 self.setErrorMsg("Choose end co-ords")
+        else:
+            # If brush not selected clear message
+            self.setErrorMsg(" ")
 
     # Disable selected brush button
     def disableBrushButton(self):
+
+        # Set the state of each brush button to their corresponding array entry
         self.wallBrush.config(state=self.brush[0])
         self.goalBrush.config(state=self.brush[1])
         self.foodBrush.config(state=self.brush[2])
@@ -424,82 +465,116 @@ class GridRobotSim(tk.Tk):
 
     # Show or hide edit menu features using grid_forget to retain information
     def toggleEditMenu(self):
+
+        # If Show is true then hide the buttons on the grid
         if self.showEditMenu:
-            self.wallBrush.grid_forget()
-            self.goalBrush.grid_forget()
-            self.foodBrush.grid_forget()
-            self.waterBrush.grid_forget()
-            self.droneBrush.grid_forget()
 
-            self.sizeLabel.grid_forget()
-            self.mapSizeSlider.grid_forget()
-            self.showEditMenu = False
-
-        else:
+            # Un-hide brush buttons
             self.wallBrush.grid(column=0, row=2)
             self.goalBrush.grid(column=1, row=2)
             self.foodBrush.grid(column=2, row=2)
             self.waterBrush.grid(column=3, row=2)
             self.droneBrush.grid(column=4, row=2)
 
+            # Update selected brush
             self.disableBrushButton()
 
+            # Un-hide world slider
             self.sizeLabel.grid(column=8, row=2)
             self.mapSizeSlider.grid(column=7, row=2)
+
+            # Set show false
+            self.showEditMenu = False
+
+        else:
+
+            # Hide brush buttons
+            self.wallBrush.grid_forget()
+            self.goalBrush.grid_forget()
+            self.foodBrush.grid_forget()
+            self.waterBrush.grid_forget()
+            self.droneBrush.grid_forget()
+
+            # Hide world slider
+            self.sizeLabel.grid_forget()
+            self.mapSizeSlider.grid_forget()
             self.showEditMenu = True
 
     # Update the simulation based on the timer
     def simtimer(self):
         while True:
+
+            # Update ticks
             self.wait = True
             sleep(0.3 - self.delay / 50)
             self.wait = False
             sleep(0.05)
+
+            # Update drones
+            self.runDrones()
+
             # Bug fix - Jamie Hollaway
             # Stops window freezing when not in focus
-            self.runDrones()
             self.update()
             self.update_idletasks()
 
-            # print(self.wait, self.delay)
-
     # Set the simulation speed when speed slider changed
     def simSpeed(self, event):
+
         self.delay = self.speedSlider.get()
-        # print(self.delay)
 
     # Toggle Trails following robots based on button
     def toggleTrails(self):
-        # Work in progress!
-        # print("ToggleTrails")# debug
+
+        # For all robots
         for robname in self.robots:
+
+            # If state is true
             if self.trails:
+
+                # Tell robot to pen up
                 print("OFF")
                 self.robots[robname].penup()
                 self.robots[robname].clear()
+
+            # If state is false
             else:
+
+                # Tell robot to put pen down
                 print("ON")
                 self.robots[robname].pendown()
+
+        # Once all the robots are inline swap state
         if self.trails:
+
             self.trails = False
+
         else:
+
             self.trails = True
 
     # Dispaly error Message
     def setErrorMsg(self, inputMsg):
+
+        # Display the error label with passed String
         self.errorLabel.config(text=inputMsg)
 
-    # ------------------------- Save Load --------------------------------------------------------
+# ------------------------- Save Load --------------------------------------------------------
 
     # Compress list of objects using pickle and save as .map file
     def saveWorld(self):
-        # print("SaveMAp")
-        filename = fd.asksaveasfilename(filetypes=[("Map Files", "*.map")], initialdir=".")
+
+        # Get user to name file
+        filename = fd.asksaveasfilename(filetypes=[("Map Files", "*.map")], initialdir="./Maps/")
+
+        # If valid filename provided
         if filename is not None:
+
             # remove robots from world!
             for robname in list(self.robots.keys()):
                 xpos, ypos = self.getXYpos(robname)
                 self.world[xpos + 1][ypos + 1] = None
+
             # Then save!
             if filename[-4:] != ".map":
                 filename += ".map"
@@ -510,28 +585,42 @@ class GridRobotSim(tk.Tk):
 
     # Uncompress list of objects previously pickled
     def loadWorld(self):
+
+        # Get user to select file
         filename = fd.askopenfilename(filetypes=[("Map Files", "*.map")], initialdir="./Maps/")
-        # print(filename)# debug
-        if filename != "":
+
+        # If valid file
+        if filename is not None:
+
+            # If the file does not have the .map extension add it
             if filename[-4:] != ".map":
+
                 filename += ".map"
 
             # UnPickel list of saved objects
             newWorld = pickle.load(open(filename, 'rb'))
 
+            # Check object type of second indexed entry, if its an integer then this is a V3 map
             if type(newWorld[1]) == int:
-                # V3 Map check
+
+                # Set map size and slider based on loaded data
                 self.mapSizeSlider.set(newWorld[1])
                 self.setMapSize(newWorld[1])
+
+                # Load world from file into local world variable
                 self.world = newWorld[0]
+
+                # Load drone array from file into local drone variable
                 self.drone = newWorld[2]
+
+                # Create drones from this array
                 for drone in list(self.drone):
                     self.newDrone(drone[0], drone[1], drone[3], drone[4])
 
+            # Else check if its a V1 or V2 map
             else:
                 if len(newWorld) < 32:  # V1 or part map
                     # map onto new map
-                    # print("V1 Map")
                     self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]  # Clear World map
                     dx = 1
                     for ix in newWorld:
@@ -542,38 +631,53 @@ class GridRobotSim(tk.Tk):
                             dy += 1
                         dx += 1
                 else:
-                    # print("V2 Map")  # debug
+                    # V2 Map
                     self.world = newWorld
 
+            # Draw loaded world
             self.drawWorld()
 
     # -------------------------------- Robot -----------------------------------------------------
 
+    # Create new robot with a name,x and y co-ords, color and shape
     def newRobot(self, robname="None", posx=1, posy=1, colour="red", rshape="None"):
+
+        # create/use Anonymous robot. Can only do one!
         if robname == "None":
-            # create/use Anonymous robot. Can only do one!
+
             robname = "anon"
+
+        # If robot with name does not already exist create one
         if robname not in self.robots:
+
+            # Generate a RawTurtle object on the canvas
             self.robots[robname] = rbt.RawTurtle(self.canvas)
+
         else:
+
             # Remove "old" robot from World
             self.world[self.maptoX(self.robots[robname].xcor()) + 1][
                 self.maptoY(self.robots[robname].ycor()) + 1] = None
+
         # Robot shape/colour
         if rshape == "None":  # Can provide own shape def
+
             # Otherwise use standard robot shape
             self.shp.append(rbt.Shape("compound"))
-            # print(self.shp, len(self.shp)-1)# debug
-            # TODO Scale images based on size of grid
+
             poly1 = ((0, 0), (10, -5), (0, 10), (-10, -5))
             self.shp[len(self.shp) - 1].addcomponent(poly1, colour, "black")
+
             poly2 = ((0, 0), (10, -5), (-10, -5))
             self.shp[len(self.shp) - 1].addcomponent(poly2, "black", colour)
+
             self.screen.register_shape(robname + "shape", self.shp[len(self.shp) - 1])
+
         else:
-            # Can use standard shape  “arrow”, “turtle”, “circle”,
-            # “square”, “triangle”, “classic”
+
+            # Can use standard shape  “arrow”, “turtle”, “circle”, “square”, “triangle”, “classic”
             self.robots[robname].shape(rshape)
+
         # Initalise robot
         self.robotStates[robname] = 0
         self.robots[robname].hideturtle()
@@ -585,231 +689,385 @@ class GridRobotSim(tk.Tk):
         self.robots[robname].goto(self.xtoMap(posx) - 3, self.ytoMap(self.mapSize - posy - 1) + 2)
         self.robots[robname].setheading(90)
         self.robots[robname].showturtle()
+
+        # If trails are set then
         if self.trails:
+
+            # clear previous trail and put pen down
             self.robots[robname].clear()
             self.robots[robname].pendown()
+
+        # If trail is not set
         else:
+
+            # Pen up and clear trail
             self.robots[robname].penup()
             self.robots[robname].clear()
+
+        # Scale the shape size based on the map size
         self.robots[robname].shapesize(30 // self.mapSize, 30 // self.mapSize)
+
         self.robots[robname].speed(2)
         self.world[posx + 1][posy + 1] = robname
+
         return "OK"
 
+    # Getter for robot x and y co-ords
     def getXYpos(self, robname):
+
         posx = self.maptoX(self.robots[robname].xcor())
         posy = self.maptoY(self.robots[robname].ycor())
+
         return posx, posy
 
-    def moveForward(self, rname):
-        if rname in self.robots and self.robotStates[rname] != "Broken":
-            if self.look(rname)[2] is None:  # Clear to move
-                posx = self.maptoX(self.robots[rname].xcor())
-                posy = self.maptoY(self.robots[rname].ycor())
+    # Tell robot with rname to move forward
+    def moveForward(self, rName):
 
-                self.world[posx + 1][posy + 1] = None  # Clear robot from world
-                self.robots[rname].forward(self.gridSpace)  # move to next grid square
-                posx = self.maptoX(self.robots[rname].xcor())
-                posy = self.maptoY(self.robots[rname].ycor())
-                self.world[posx + 1][posy + 1] = rname  # update to world to show robot
+        # If the robot exists and is not broken
+        if rName in self.robots and self.robotStates[rName] != "Broken":
+
+            # Clear to move in front
+            if self.look(rName)[2] is None:
+
+                # Save x and y co-ords
+                posx = self.maptoX(self.robots[rName].xcor())
+                posy = self.maptoY(self.robots[rName].ycor())
+
+                # Clear robot from world
+                self.world[posx + 1][posy + 1] = None
+
+                # move to next grid square
+                self.robots[rName].forward(self.gridSpace)
+
+                # Save new x and y co-ords
+                posx = self.maptoX(self.robots[rName].xcor())
+                posy = self.maptoY(self.robots[rName].ycor())
+
+                # update to world to show robot
+                self.world[posx + 1][posy + 1] = rName
+
                 return "OK"
             else:
+
                 # If not clear (None), then collision
-                self.robots[rname].shape("circle")
-                self.robotStates[rname] = "Broken"  # Out of order!
+                self.robots[rName].shape("circle")
+                self.robotStates[rName] = "Broken"  # Out of order!
                 return "Bang"
-        elif self.robotStates[rname] != "Broken":
+
+        # If broken then return broken
+        elif self.robotStates[rName] != "Broken":
             return "Broken"
+
         else:
+
             return "Error"
 
-    def turnLeft(self, rname):
-        if rname in self.robots:
-            if self.robotStates[rname] != "Broken":
-                self.robots[rname].left(90)
+    # tell robot with rname to turn left
+    def turnLeft(self, rName):
+
+        # If robot exists
+        if rName in self.robots:
+
+            # And is not broken
+            if self.robotStates[rName] != "Broken":
+
+                # Turn left
+                self.robots[rName].left(90)
+
                 return "OK"
+
+            # If broken
             else:
+
                 return "Broken"
+
         return "Robot name not found"
 
-    def turnRight(self, rname):
-        if rname in self.robots:
-            if self.robotStates[rname] != "Broken":
-                self.robots[rname].right(90)
+    # tell robot with rname to turn righ
+    def turnRight(self, rName):
+
+        # If robot exists
+        if rName in self.robots:
+
+            # And is not broken
+            if self.robotStates[rName] != "Broken":
+
+                # Turn right
+                self.robots[rName].right(90)
                 return "OK"
+
+            # If broken
             else:
+
                 return "Broken"
+
         return "Robot name not found"
 
-    def look(self, rname):
-        if rname in self.robots:
-            if self.robotStates[rname] != "Broken":
-                posx = self.maptoX(self.robots[rname].xcor())
-                posy = self.maptoY(self.robots[rname].ycor())
-                heading = int(self.robots[rname].heading())
-                print(rname, posx, posy, heading)  # debug
+    # Ask robot with rName to report on what is in front of it
+    def look(self, rName):
 
-                if heading == 0 and posx < self.mapSize + 1:  # East
+        # If robot exists
+        if rName in self.robots:
+
+            # And is not broken
+            if self.robotStates[rName] != "Broken":
+
+                # Get x, y and heading for the robot
+                posx = self.maptoX(self.robots[rName].xcor())
+                posy = self.maptoY(self.robots[rName].ycor())
+                heading = int(self.robots[rName].heading())
+
+                # For each direction return world data in the order:
+                # 0:left 1: frontLeft 2: in front 3: frontRight 4: right
+
+                # East
+                if heading == 0 and posx < self.mapSize + 1:
                     val = [self.world[posx + 1][posy + 2], self.world[posx + 2][posy + 2],
                            self.world[posx + 2][posy + 1], self.world[posx + 2][posy], self.world[posx + 1][posy]]
-                elif heading == 90 and posy < self.mapSize + 1:  # North
+
+                # North
+                elif heading == 90 and posy < self.mapSize + 1:
                     val = [self.world[posx][posy + 1], self.world[posx][posy + 2],
                            self.world[posx + 1][posy + 2], self.world[posx + 2][posy + 2],
                            self.world[posx + 2][posy + 1]]
-                elif heading == 180 and posx >= 0:  # West
+
+                # West
+                elif heading == 180 and posx >= 0:
                     val = [self.world[posx + 1][posy], self.world[posx][posy],
                            self.world[posx][posy + 1], self.world[posx][posy + 2], self.world[posx + 1][posy + 2]]
-                elif heading == 270 and posy >= 0:  # South
+
+                # South
+                elif heading == 270 and posy >= 0:
                     val = [self.world[posx + 2][posy + 1], self.world[posx + 2][posy],
                            self.world[posx + 1][posy], self.world[posx][posy], self.world[posx][posy + 1]]
-                else:
-                    # print("Edge of world")#debug
-                    # Facing edge of world
-                    #val == ["Wall", "Wall", "Wall", "Wall", "Wall"]
-                    """
-                    if heading == 0: #East edge
-                        if posy<30: #Not upper right corner
-                            val[0] = self.world[posx][posy+1]
-                        elif posy>0: # Not lower left corner
-                            val[4] = self.world[posx][posy-1]
 
-                    elif heading == 180:# West edge
-                        if posy<30: # Not Upper Right corner
-                            val[4] = self.world[posx][posy+1]
-                        elif posy>0: # Not Lower rightcorner
-                            val[0] = self.world[posx][posy-1]
-
-                    elif heading == 90: #North edge
-                        if posx<30: # Not Upper Right corner
-                            val[4] = self.world[posx+1][posy]
-                        elif posx>0: # Not Upper Left Corner
-                            val[0] = self.world[posx-1][posy]
-
-                    else: # South edge
-                        if posx<30: #Not lower left corner
-                            val[0] = self.world[posx+1][posy]
-                        elif posx>0: # Not lower right corner
-                            val[4] = self.world[posx-1][posy]
-                    """
-                # print("world val = ", val)# debug
-                # if val == None: val = "None"
                 return val
+
+            # If the robot is broken just return a junk broken string
             else:
+
                 return ["Broken", "Broken", "Broken", "Broken", "Broken"]
+
         return "Robot name not found"
 
     # --------------------------------- Drones -------------------------------------------------
 
     def newDrone(self, xpos, ypos, loopx, loopy):
+
+        # If the path is clear
         if self.checkPath(xpos, ypos, loopx, loopy):
+
+            # Iterate on drone name and set as name
             name = self.generateDroneName()
+
+            # If array index exists
             try:
+
+                # Save data
                 self.drone[int(name[5:])][0] = xpos
                 self.drone[int(name[5:])][1] = ypos
                 self.drone[int(name[5:])][2] = loopx
                 self.drone[int(name[5:])][3] = loopy
                 self.drone[int(name[5:])][4] = True
                 self.drone[int(name[5:])][5] = True
+
             except Exception as exception:
+
+                # Else append element contains data
                 self.drone.append([xpos, ypos, loopx, loopy, True, True])
 
+            # Create robot with new saved parameters
             self.newRobot(name, self.drone[int(name[5:])][0], self.drone[int(name[5:])][1], "Pink")
 
-        # Message
-
+    # Make the drones run a loop from there start to there end coords and back again
     def runDrones(self):
+
+        # Check all robots
         for robname in list(self.robots.keys()):
+
+            # If they are drones
             if robname[:5] == "Drone":
+
+                # get their co-ords
                 x, y = self.getXYpos(robname)
+
+                # If they are moving to loop co-ords or back to start
                 if self.drone[int(robname[5:])][4]:
+
+                    # If target y is higher and x is same as start
                     if y < self.drone[int(robname[5:])][3] and x == self.drone[int(robname[5:])][0]:
+
+                        # If not facing up turn to face up
                         if self.robots[robname].heading() != 90:
+
                             self.turnRight(robname)
+
+                        # If facing correct direction move forward
                         else:
+
                             if self.look(robname)[2] is None:
+
                                 self.moveForward(robname)
 
+                    # If target y is lower and x is same as start
                     elif y > self.drone[int(robname[5:])][3] and x == self.drone[int(robname[5:])][0]:
+
+                        # If not facing up turn to face down
                         if self.robots[robname].heading() != 270:
+
                             self.turnRight(robname)
+
+                        # If facing correct direction move forward
                         else:
+
                             if self.look(robname)[2] is None:
+
                                 self.moveForward(robname)
 
+                    # If target x is to the left and y is same as start
                     elif y == self.drone[int(robname[5:])][3] and x > self.drone[int(robname[5:])][2]:
+
+                        # If not facing left turn to face left
                         if self.robots[robname].heading() != 180:
+
                             self.turnRight(robname)
+
                         else:
+
+                            # If facing correct direction move forward
                             if self.look(robname)[2] is None:
+
                                 self.moveForward(robname)
 
+                    # If target x is to the right and y is same as start
                     elif y == self.drone[int(robname[5:])][3] and x < self.drone[int(robname[5:])][2]:
+
+                        # If not facing right turn to face right
                         if self.robots[robname].heading() != 0:
+
                             self.turnRight(robname)
+
                         else:
+
+                            # If facing correct direction move forward
                             if self.look(robname)[2] is None:
+
                                 self.moveForward(robname)
 
+                    # else begin move back to start
                     else:
-                        # elif y == self.drone[int(robname[5:])][3] and x == self.drone[int(robname[5:])][2]:
                         self.drone[int(robname[5:])][4] = False
+
+                # If moving back to the start
                 else:
+
+                    # If target y is higher and x is same as xloop
                     if y < self.drone[int(robname[5:])][1] and x == self.drone[int(robname[5:])][2]:
+
+                        # If not facing up turn until facing up
                         if self.robots[robname].heading() != 90:
+
                             self.turnRight(robname)
+
                         else:
+
+                            # If facing correct direction move forward
                             if self.look(robname)[2] is None:
+
                                 self.moveForward(robname)
 
+                    # If target y is lower and x is same as xloop
                     elif y > self.drone[int(robname[5:])][1] and x == self.drone[int(robname[5:])][2]:
+
+                        # If not facing down turn until facing down
                         if self.robots[robname].heading() != 270:
+
                             self.turnRight(robname)
+
                         else:
+
+                            # If facing direction is correct move forward
                             if self.look(robname)[2] is None:
+
                                 self.moveForward(robname)
 
+                    # If target x is to the left and y is equal to y loop
                     elif y == self.drone[int(robname[5:])][1] and x > self.drone[int(robname[5:])][0]:
+
+                        # If not facing left turn until facing left
                         if self.robots[robname].heading() != 180:
+
                             self.turnRight(robname)
+
                         else:
+
+                            # If facing the direction is correct move forward
                             if self.look(robname)[2] is None:
+
                                 self.moveForward(robname)
 
+                    # If target x is to the right and y is equal to y loop
                     elif y == self.drone[int(robname[5:])][1] and x < self.drone[int(robname[5:])][0]:
+
+                        # If not facing right turn unitl facing right
                         if self.robots[robname].heading() != 0:
+
                             self.turnRight(robname)
+
                         else:
+
+                            # If facing direction is correct move forward
                             if self.look(robname)[2] is None:
+
                                 self.moveForward(robname)
+
+                    # Else begin heading back to start
                     else:
+
                         self.drone[int(robname[5:])][4] = True
 
+    # Check for existing drones and iterate drone name based on number found
     def generateDroneName(self):
+
         count = 0
+        # Count number of robots with drone as start of name
         for robname in list(self.robots.keys()):
+
             if robname[:5] == "Drone":
                 count += 1
+
         return "Drone" + str(count)
 
+    # Take the start and end co-ords for a drone and check if the path is clear
     def checkPath(self, xpos, ypos, loopx, loopy):
         ypos += 1
         loopy += 1
         xpos += 1
         loopx += 1
 
+        # Check x position moves
         for i in range(xpos, loopx):
+
             if self.world[i][ypos] is not None:
+
                 self.setErrorMsg(("Path not clear: ", self.world[i][ypos], " At: X:", xpos, " Y:", ypos))
                 return False
+
             if self.world[i][loopy] is not None:
+
                 self.setErrorMsg(("Path not clear: ", self.world[i][loopy], " At: X:", xpos, " Y:", ypos))
                 return False
 
+        # Check y position moves
         for j in range(ypos, loopy):
+
             if self.world[xpos][j] is not None:
+
                 self.setErrorMsg(("Path not clear: ", self.world[xpos][j], " At: X:", xpos, " Y:", ypos))
                 return False
+
             if self.world[loopx][j] is not None:
+
                 self.setErrorMsg(("Path not clear: ", self.world[loopx][j], " At: X:", xpos, " Y:", ypos))
                 return False
 
