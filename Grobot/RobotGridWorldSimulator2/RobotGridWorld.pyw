@@ -28,15 +28,15 @@
 # Version 2  March 2016
 #   Fixed serious bug in Look()routine. had to change Map.map file format/size
 #       Will load V1 maps, but if saved from V2, will load in V1 program
-#       Reccomend update to V2!
+#       Recommend update to V2!
 
 # Python 2 and 3 compatibility
 from __future__ import absolute_import, division, print_function
 
 try:
-    input = raw_input  # Python 3 style input()
+    test = raw_input  # Python 3 style input()
 
-except:
+except Exception as e:
     pass
 
 try:
@@ -45,11 +45,11 @@ try:
     import tkinter.filedialog as fd
     import tkinter.messagebox as mb
 
-except:
+except Exception as e:
     # Else Python 2 Tkinter
-    import Tkinter as tk
-    import tkFileDialog as fd
-    import tkMessageBox as mb
+    import Tkinter as Tk
+    import tkFileDialog as Fd
+    import tkMessageBox as Mb
 
 # Standard imports
 from threading import Thread
@@ -70,6 +70,7 @@ class GridRobotSim(tk.Tk):
         # Define map size and grid size
         self.gridSpace = 20
         self.mapSize = 30
+
         # Define world size and borders
         self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]  # World map
 
@@ -79,7 +80,7 @@ class GridRobotSim(tk.Tk):
         self.showEditMenu = False
 
         # Define brush variable
-        self.brush = ['disabled', 'normal', 'normal', 'normal']
+        self.brush = ['disabled', 'normal', 'normal', 'normal', 'normal']
 
         # List of robot names
         self.robots = {}
@@ -94,8 +95,12 @@ class GridRobotSim(tk.Tk):
         tk.Tk.__init__(self, master)
         tk.Tk.title(self, "RobotGridWorld V2")
 
-        # Initalise drone target array
+        # Initialise drone target array
         self.drone = [[0, 0, 0, 0, True, False]]
+
+        # Initialise drone brush variable
+        self.droneBrushState = True
+        self.droneBrushStart = (0, 0)
 
         # Draw frame for canvas to be drawn onto
         self.frame = tk.Frame(master, bg="black", borderwidth=3)
@@ -104,6 +109,10 @@ class GridRobotSim(tk.Tk):
         # Draw canvas with set frame heights and widths
         self.canvas = tk.Canvas(self.frame, height=self.frameHeight, width=self.frameWidth, bg="white")
         self.canvas.grid(row=0, column=5, columnspan=1, rowspan=1, padx=5, pady=5)
+
+        # Error Message
+        self.errorLabel = tk.Label(text="")
+        self.errorLabel.grid(column=0, row=0, columnspan=5)
 
         # Buttons under canvas area to the left
         self.newButton = tk.Button(master, text="New Map", command=lambda: self.newWorld())
@@ -142,11 +151,17 @@ class GridRobotSim(tk.Tk):
         self.waterBrush = tk.Button(master, text="Water", state=self.brush[3], command=lambda: self.setBrush(3))
         self.waterBrush.grid_forget()
 
-        # Map Size slider that will be hidden aswell
+        self.droneBrush = tk.Button(master, text="Drone", state=self.brush[4], command=lambda: self.setBrush(4))
+        self.droneBrush.grid_forget()
+
+        # Map Size slider that will be hidden
         self.mapSizeSlider = tk.Scale(master, from_=5, to=50, resolution=5, orient=tk.HORIZONTAL,
                                       command=self.setMapSize)
         self.mapSizeSlider.set(30)
         self.mapSizeSlider.grid_forget()
+
+        self.sizeLabel = tk.Label(text="Map Size")
+        self.sizeLabel.grid_forget()
 
         # Add dummy turtle as hidden to set up drawing area
         self.robot1 = rbt.RawTurtle(self.canvas)  # changes canvas coords! (0,0) now in middle
@@ -173,21 +188,27 @@ class GridRobotSim(tk.Tk):
 
     # Take in the desired mapSize and calculate the size of grid need to accommodate
     def calculateGridspace(self, targetMapSize):
-        # print(int(self.frameHeight/targetMapSize))
+
         return int(self.frameHeight / targetMapSize)
 
     # When the slider changes update grid space, map size and world
     def setMapSize(self, event):
+
+        # Only update if there is a change
         if self.mapSizeSlider.get() != self.mapSize:
+
+            # Calculate the gridspace
             self.gridSpace = self.calculateGridspace(self.mapSizeSlider.get())
+            # set mapSize
             self.mapSize = self.mapSizeSlider.get()
+            # Make world at new size
             self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]
             # TODO add scaling without clearing previous maps
+
         # Draw new world
         self.drawWorld()
 
-        # Draws the grid and labels XYaxis lines, labels
-
+    # Draws the grid and labels XYaxis lines, labels
     def drawWorld(self):
 
         # Clear canvas and reset count
@@ -211,54 +232,105 @@ class GridRobotSim(tk.Tk):
 
         # Set boundary walls: 0,0 to mapSize,mapSize
         mapSize = len(self.world) - 1
-        # print(mapSize) # debug
         for n in range(0, mapSize):
             self.world[0][n] = "Wall"
-            self.world[mapSize][n] = "Wall"
+            self.world[mapSize - 1][n] = "Wall"
             self.world[n][0] = "Wall"
-            self.world[n][mapSize] = "Wall"
-        self.world[mapSize][mapSize] = "Wall"
+            self.world[n][mapSize - 1] = "Wall"
+        self.world[mapSize - 1][mapSize - 1] = "Wall"
 
-        # Draw filled grids squares
-        # print ("World dims = ", len(self.world), len(self.world[0]))#debug
+        # Draw filled grids square
         for ix in range(0, len(self.world) - 1):
             for iy in range(0, len(self.world[ix]) - 1):
+
                 if self.world[ix + 1][iy + 1] is not None:
-                    # print(ix, iy, self.world[ix][iy])# debug
-                    if (self.world[ix + 1][iy + 1] == "Wall"):
+
+                    if self.world[ix + 1][iy + 1] == "Wall":
                         self.fillGridWall(ix, iy)
-                    elif (self.world[ix + 1][iy + 1] == "Goal"):
+
+                    elif self.world[ix + 1][iy + 1] == "Goal":
                         self.fillGridGoal(ix, iy)
-                    elif (self.world[ix + 1][iy + 1] == "Food"):
+
+                    elif self.world[ix + 1][iy + 1] == "Food":
                         self.fillGridFood(ix, iy)
-                    elif (self.world[ix + 1][iy + 1] == "Water"):
+
+                    elif self.world[ix + 1][iy + 1] == "Water":
                         self.fillGridWater(ix, iy)
+
                 else:
+
                     self.clearGrid(ix, iy)
 
-    # Take xy mouse coords and translate into map values
+    # Fill clicked on square based on brush
     def editGrid(self, mousex, mousey):
+
+        # Convert mouse co-ords to grid co-ords
         x = self.maptoX(mousex)
         y = self.maptoY(mousey)
-        # print("EditGrid", mousex, mousey, x, y, self.world[x][y])# Debug
+
         if self.world[x + 1][y + 1] is None:
-            # Make wall (etc.?)
+
+            # Make filled square with wall
             if self.brush[0] == 'disabled':
                 self.fillGridWall(x, y)
                 self.world[x + 1][y + 1] = "Wall"
+
+            # Make filled square with Goal
             elif self.brush[1] == 'disabled':
                 self.fillGridGoal(x, y)
                 self.world[x + 1][y + 1] = "Goal"
+
+            # Make filled square with Food
             elif self.brush[2] == 'disabled':
                 self.fillGridFood(x, y)
                 self.world[x + 1][y + 1] = "Food"
+
+            # Make filled square with Water
             elif self.brush[3] == 'disabled':
                 self.fillGridWater(x, y)
                 self.world[x + 1][y + 1] = "Water"
 
-        else:  # Clear grid square
+            # Evaluate the drone inputs
+            elif self.brush[4] == 'disabled':
+                self.droneBrushHandler(x, y)
+
+        else:
+            # Clear grid square
             self.clearGrid(x, y)
             self.world[x + 1][y + 1] = None
+
+    # Decide on actions for drone brush
+    def droneBrushHandler(self, x, y):
+        # If start co-ords
+        if self.droneBrushState:
+
+            # Save start co-ords
+            self.droneBrushStart = x, y
+            # Change to end co-ords
+            self.droneBrushState = False
+            # Tell user whats up
+            self.displayDroneBrushMsg()
+
+        # If end co-ords
+        else:
+
+            # Get start co-ords
+            sx, sy = self.droneBrushStart
+            # Check if path ok
+            if self.checkPath(sx, sy, x, y):
+
+                # If so make new drone
+                self.newDrone(sx, sy, x, y)
+                # Tell user whats up
+                self.displayDroneBrushMsg()
+
+            else:
+
+                # Reset start co-ords and tell user
+                self.droneBrushStart = 0, 0
+
+            # Change to end co-ords
+            self.droneBrushState = True
 
     # Fill grid areas with scaled size to grid
     def fillGridWall(self, x, y):
@@ -318,6 +390,9 @@ class GridRobotSim(tk.Tk):
     def newWorld(self):
         # print("NewMAp")
         self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]  # World map
+        # Reset drone values
+        self.drone = [[0, 0, 0, 0, True, False]]
+        self.robots.clear()
         self.drawWorld()
 
     # ------------------------------ UI Frame ---------------------------------------------------------
@@ -330,6 +405,14 @@ class GridRobotSim(tk.Tk):
             else:
                 self.brush[i] = 'disabled'
         self.disableBrushButton()
+        self.displayDroneBrushMsg()
+
+    def displayDroneBrushMsg(self):
+        if self.brush[4] == 'disabled':
+            if self.droneBrushState:
+                self.setErrorMsg("Choose starting co-ords")
+            else:
+                self.setErrorMsg("Choose end co-ords")
 
     # Disable selected brush button
     def disableBrushButton(self):
@@ -337,6 +420,7 @@ class GridRobotSim(tk.Tk):
         self.goalBrush.config(state=self.brush[1])
         self.foodBrush.config(state=self.brush[2])
         self.waterBrush.config(state=self.brush[3])
+        self.droneBrush.config(state=self.brush[4])
 
     # Show or hide edit menu features using grid_forget to retain information
     def toggleEditMenu(self):
@@ -345,7 +429,9 @@ class GridRobotSim(tk.Tk):
             self.goalBrush.grid_forget()
             self.foodBrush.grid_forget()
             self.waterBrush.grid_forget()
+            self.droneBrush.grid_forget()
 
+            self.sizeLabel.grid_forget()
             self.mapSizeSlider.grid_forget()
             self.showEditMenu = False
 
@@ -354,9 +440,11 @@ class GridRobotSim(tk.Tk):
             self.goalBrush.grid(column=1, row=2)
             self.foodBrush.grid(column=2, row=2)
             self.waterBrush.grid(column=3, row=2)
+            self.droneBrush.grid(column=4, row=2)
 
             self.disableBrushButton()
 
+            self.sizeLabel.grid(column=8, row=2)
             self.mapSizeSlider.grid(column=7, row=2)
             self.showEditMenu = True
 
@@ -369,8 +457,10 @@ class GridRobotSim(tk.Tk):
             sleep(0.05)
             # Bug fix - Jamie Hollaway
             # Stops window freezing when not in focus
+            self.runDrones()
             self.update()
             self.update_idletasks()
+
             # print(self.wait, self.delay)
 
     # Set the simulation speed when speed slider changed
@@ -395,6 +485,10 @@ class GridRobotSim(tk.Tk):
         else:
             self.trails = True
 
+    # Dispaly error Message
+    def setErrorMsg(self, inputMsg):
+        self.errorLabel.config(text=inputMsg)
+
     # ------------------------- Save Load --------------------------------------------------------
 
     # Compress list of objects using pickle and save as .map file
@@ -407,10 +501,11 @@ class GridRobotSim(tk.Tk):
                 xpos, ypos = self.getXYpos(robname)
                 self.world[xpos + 1][ypos + 1] = None
             # Then save!
-            if filename[-4:] != ".map": filename += ".map"
+            if filename[-4:] != ".map":
+                filename += ".map"
 
             # Create list of objects or values to be pickled and saved
-            data = {0: self.world, 1: self.mapSize}
+            data = {0: self.world, 1: self.mapSize, 2: self.drone}
             pickle.dump(data, open(filename, 'wb'), 2)  # Protocol 2 for python 2 compatibility
 
     # Uncompress list of objects previously pickled
@@ -418,7 +513,8 @@ class GridRobotSim(tk.Tk):
         filename = fd.askopenfilename(filetypes=[("Map Files", "*.map")], initialdir="./Maps/")
         # print(filename)# debug
         if filename != "":
-            if filename[-4:] != ".map": filename += ".map"
+            if filename[-4:] != ".map":
+                filename += ".map"
 
             # UnPickel list of saved objects
             newWorld = pickle.load(open(filename, 'rb'))
@@ -428,6 +524,10 @@ class GridRobotSim(tk.Tk):
                 self.mapSizeSlider.set(newWorld[1])
                 self.setMapSize(newWorld[1])
                 self.world = newWorld[0]
+                self.drone = newWorld[2]
+                for drone in list(self.drone):
+                    self.newDrone(drone[0], drone[1], drone[3], drone[4])
+
             else:
                 if len(newWorld) < 32:  # V1 or part map
                     # map onto new map
@@ -444,6 +544,7 @@ class GridRobotSim(tk.Tk):
                 else:
                     # print("V2 Map")  # debug
                     self.world = newWorld
+
             self.drawWorld()
 
     # -------------------------------- Robot -----------------------------------------------------
@@ -452,7 +553,7 @@ class GridRobotSim(tk.Tk):
         if robname == "None":
             # create/use Anonymous robot. Can only do one!
             robname = "anon"
-        if not robname in self.robots:
+        if robname not in self.robots:
             self.robots[robname] = rbt.RawTurtle(self.canvas)
         else:
             # Remove "old" robot from World
@@ -481,16 +582,16 @@ class GridRobotSim(tk.Tk):
         self.robots[robname].penup()
         self.robots[robname].shape(robname + "shape")
         self.robots[robname].speed(0)
-        self.robots[robname].goto(self.xtoMap(posx) - 3, self.ytoMap(self.mapSize - posy) + 2)
+        self.robots[robname].goto(self.xtoMap(posx) - 3, self.ytoMap(self.mapSize - posy - 1) + 2)
         self.robots[robname].setheading(90)
         self.robots[robname].showturtle()
-        self.robot[robname].posy = self.robot[robname].posy + 1  # todo findout what happend
         if self.trails:
             self.robots[robname].clear()
             self.robots[robname].pendown()
         else:
             self.robots[robname].penup()
             self.robots[robname].clear()
+        self.robots[robname].shapesize(30 // self.mapSize, 30 // self.mapSize)
         self.robots[robname].speed(2)
         self.world[posx + 1][posy + 1] = robname
         return "OK"
@@ -498,7 +599,7 @@ class GridRobotSim(tk.Tk):
     def getXYpos(self, robname):
         posx = self.maptoX(self.robots[robname].xcor())
         posy = self.maptoY(self.robots[robname].ycor())
-        return (posx, posy)
+        return posx, posy
 
     def moveForward(self, rname):
         if rname in self.robots and self.robotStates[rname] != "Broken":
@@ -507,7 +608,7 @@ class GridRobotSim(tk.Tk):
                 posy = self.maptoY(self.robots[rname].ycor())
 
                 self.world[posx + 1][posy + 1] = None  # Clear robot from world
-                self.robots[rname].forward(20)  # move to next grid square
+                self.robots[rname].forward(self.gridSpace)  # move to next grid square
                 posx = self.maptoX(self.robots[rname].xcor())
                 posy = self.maptoY(self.robots[rname].ycor())
                 self.world[posx + 1][posy + 1] = rname  # update to world to show robot
@@ -548,10 +649,10 @@ class GridRobotSim(tk.Tk):
                 heading = int(self.robots[rname].heading())
                 print(rname, posx, posy, heading)  # debug
 
-                if heading == 0 and posx < 31:  # East
+                if heading == 0 and posx < self.mapSize + 1:  # East
                     val = [self.world[posx + 1][posy + 2], self.world[posx + 2][posy + 2],
                            self.world[posx + 2][posy + 1], self.world[posx + 2][posy], self.world[posx + 1][posy]]
-                elif heading == 90 and posy < 31:  # North
+                elif heading == 90 and posy < self.mapSize + 1:  # North
                     val = [self.world[posx][posy + 1], self.world[posx][posy + 2],
                            self.world[posx + 1][posy + 2], self.world[posx + 2][posy + 2],
                            self.world[posx + 2][posy + 1]]
@@ -564,7 +665,7 @@ class GridRobotSim(tk.Tk):
                 else:
                     # print("Edge of world")#debug
                     # Facing edge of world
-                    val == ["Wall", "Wall", "Wall", "Wall", "Wall"]
+                    #val == ["Wall", "Wall", "Wall", "Wall", "Wall"]
                     """
                     if heading == 0: #East edge
                         if posy<30: #Not upper right corner
@@ -602,20 +703,86 @@ class GridRobotSim(tk.Tk):
     def newDrone(self, xpos, ypos, loopx, loopy):
         if self.checkPath(xpos, ypos, loopx, loopy):
             name = self.generateDroneName()
-            self.drone[int(name[5:])][0] = xpos
-            self.drone[int(name[5:])][1] = ypos
-            self.drone[int(name[5:])][2] = loopx
-            self.drone[int(name[5:])][3] = loopy
-            self.drone[int(name[5:])][4] = True
-            self.drone[int(name[5:])][5] = True
+            try:
+                self.drone[int(name[5:])][0] = xpos
+                self.drone[int(name[5:])][1] = ypos
+                self.drone[int(name[5:])][2] = loopx
+                self.drone[int(name[5:])][3] = loopy
+                self.drone[int(name[5:])][4] = True
+                self.drone[int(name[5:])][5] = True
+            except Exception as exception:
+                self.drone.append([xpos, ypos, loopx, loopy, True, True])
+
+            self.newRobot(name, self.drone[int(name[5:])][0], self.drone[int(name[5:])][1], "Pink")
 
         # Message
-    # TODO load nad run drones
-    # def runDrones(self):
-    #     for robname in list(self.robot.keys()):
-    #         if robname[:5] == "Drone":
-    #             if self.drone[int(robname[5:])][4]:
-    #
+
+    def runDrones(self):
+        for robname in list(self.robots.keys()):
+            if robname[:5] == "Drone":
+                x, y = self.getXYpos(robname)
+                if self.drone[int(robname[5:])][4]:
+                    if y < self.drone[int(robname[5:])][3] and x == self.drone[int(robname[5:])][0]:
+                        if self.robots[robname].heading() != 90:
+                            self.turnRight(robname)
+                        else:
+                            if self.look(robname)[2] is None:
+                                self.moveForward(robname)
+
+                    elif y > self.drone[int(robname[5:])][3] and x == self.drone[int(robname[5:])][0]:
+                        if self.robots[robname].heading() != 270:
+                            self.turnRight(robname)
+                        else:
+                            if self.look(robname)[2] is None:
+                                self.moveForward(robname)
+
+                    elif y == self.drone[int(robname[5:])][3] and x > self.drone[int(robname[5:])][2]:
+                        if self.robots[robname].heading() != 180:
+                            self.turnRight(robname)
+                        else:
+                            if self.look(robname)[2] is None:
+                                self.moveForward(robname)
+
+                    elif y == self.drone[int(robname[5:])][3] and x < self.drone[int(robname[5:])][2]:
+                        if self.robots[robname].heading() != 0:
+                            self.turnRight(robname)
+                        else:
+                            if self.look(robname)[2] is None:
+                                self.moveForward(robname)
+
+                    else:
+                        # elif y == self.drone[int(robname[5:])][3] and x == self.drone[int(robname[5:])][2]:
+                        self.drone[int(robname[5:])][4] = False
+                else:
+                    if y < self.drone[int(robname[5:])][1] and x == self.drone[int(robname[5:])][2]:
+                        if self.robots[robname].heading() != 90:
+                            self.turnRight(robname)
+                        else:
+                            if self.look(robname)[2] is None:
+                                self.moveForward(robname)
+
+                    elif y > self.drone[int(robname[5:])][1] and x == self.drone[int(robname[5:])][2]:
+                        if self.robots[robname].heading() != 270:
+                            self.turnRight(robname)
+                        else:
+                            if self.look(robname)[2] is None:
+                                self.moveForward(robname)
+
+                    elif y == self.drone[int(robname[5:])][1] and x > self.drone[int(robname[5:])][0]:
+                        if self.robots[robname].heading() != 180:
+                            self.turnRight(robname)
+                        else:
+                            if self.look(robname)[2] is None:
+                                self.moveForward(robname)
+
+                    elif y == self.drone[int(robname[5:])][1] and x < self.drone[int(robname[5:])][0]:
+                        if self.robots[robname].heading() != 0:
+                            self.turnRight(robname)
+                        else:
+                            if self.look(robname)[2] is None:
+                                self.moveForward(robname)
+                    else:
+                        self.drone[int(robname[5:])][4] = True
 
     def generateDroneName(self):
         count = 0
@@ -625,17 +792,25 @@ class GridRobotSim(tk.Tk):
         return "Drone" + str(count)
 
     def checkPath(self, xpos, ypos, loopx, loopy):
+        ypos += 1
+        loopy += 1
+        xpos += 1
+        loopx += 1
 
         for i in range(xpos, loopx):
             if self.world[i][ypos] is not None:
+                self.setErrorMsg(("Path not clear: ", self.world[i][ypos], " At: X:", xpos, " Y:", ypos))
                 return False
             if self.world[i][loopy] is not None:
+                self.setErrorMsg(("Path not clear: ", self.world[i][loopy], " At: X:", xpos, " Y:", ypos))
                 return False
 
-        for j in range(ypos,loopy):
+        for j in range(ypos, loopy):
             if self.world[xpos][j] is not None:
+                self.setErrorMsg(("Path not clear: ", self.world[xpos][j], " At: X:", xpos, " Y:", ypos))
                 return False
-            if self.world[loopx][i] is not None:
+            if self.world[loopx][j] is not None:
+                self.setErrorMsg(("Path not clear: ", self.world[loopx][j], " At: X:", xpos, " Y:", ypos))
                 return False
 
         return True
@@ -657,22 +832,21 @@ class GridRobotSim(tk.Tk):
         try:
             # Create IP socket and wait for customers
             tcpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        except:
+        except Exception as exception:
             print("Error creating socket")
         print("Please wait: Binding address to socket")
         # Bug fix for Mac - C ontributed by Jamie Hollaway
         tcpSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        msgtext = tk.Label(self.frame, text="Please Wait: Setting up Connection", bg="red")
-        # msgtext.grid(column=0,row=0)
+        self.setErrorMsg("Please Wait: Setting up Connection")
         while tcpOk == 0:
             try:
                 tcpSock.bind(("localhost", 9001))
                 tcpSock.listen(3)
                 tcpOk = 1
-            except:
+            except Exception as exception:
                 sleep(1.0)  # Keep trying!
         print("Socket ready now")
-        msgtext.destroy()
+        self.setErrorMsg("")
         # make sure socket closes at eop
         atexit.register(tcpSock.close)
         atexit.register(tcpSock.shutdown, 1)
@@ -685,7 +859,7 @@ class GridRobotSim(tk.Tk):
                 thrd = Thread(target=self.despatch, args=(cli_sock,))
                 thrd.daemon = True
                 thrd.start()
-            except:
+            except Exception as exception:
                 # raise # debug
                 print("Warning TCP/IP Error")  # Just keep on with next request
         # Clean up if this point ever reached
@@ -700,7 +874,7 @@ class GridRobotSim(tk.Tk):
         # print("Connected") # Debug
         msg = cli_sock.recv(50).decode('utf-8')
         print("*" + msg)  # debug
-        if (msg != "Q"):
+        if msg != "Q":
             msg = msg.split()  # parse
             # for i in msg: print(i) #debug
 
@@ -723,7 +897,7 @@ class GridRobotSim(tk.Tk):
                     rmsg = self.getXYpos(msg[1])
                 else:
                     rmsg = "Unknown command"
-            except:
+            except Exception as exception:
                 # raise #debug. If error just carry on
                 rmsg = "Server Error"
 
