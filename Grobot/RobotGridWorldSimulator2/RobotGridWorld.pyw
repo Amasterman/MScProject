@@ -155,7 +155,7 @@ class GridRobotSim(tk.Tk):
         self.droneBrush.grid_forget()
 
         # Map Size slider that will be hidden
-        self.mapSizeSlider = tk.Scale(master, from_=5, to=50, resolution=5, orient=tk.HORIZONTAL,
+        self.mapSizeSlider = tk.Scale(master, from_=10, to=50, resolution=10, orient=tk.HORIZONTAL,
                                       command=self.setMapSize)
         self.mapSizeSlider.set(30)
         self.mapSizeSlider.grid_forget()
@@ -184,7 +184,7 @@ class GridRobotSim(tk.Tk):
         self.timerTrd.daemon = True
         self.timerTrd.start()
 
-# -------------------------------- Mapping ---------------------------------------------------
+    # -------------------------------- Mapping ---------------------------------------------------
 
     # Take in the desired mapSize and calculate the size of grid need to accommodate
     def calculateGridspace(self, targetMapSize):
@@ -197,13 +197,33 @@ class GridRobotSim(tk.Tk):
         # Only update if there is a change
         if self.mapSizeSlider.get() != self.mapSize:
 
+            tempWorld = self.world
+            tempMapsize = self.mapSize
+
+            # clear boundary walls: 0,0 to mapSize,mapSize
+            mapSize = len(self.world) - 1
+            for n in range(0, mapSize):
+                tempWorld[0][n] = "None"
+                tempWorld[mapSize - 1][n] = "None"
+                tempWorld[n][0] = "None"
+                tempWorld[n][mapSize - 1] = "None"
+            tempWorld[mapSize - 1][mapSize - 1] = "None"
+
             # Calculate the gridspace
             self.gridSpace = self.calculateGridspace(self.mapSizeSlider.get())
             # set mapSize
             self.mapSize = self.mapSizeSlider.get()
+
             # Make world at new size
             self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]
-            # TODO add scaling without clearing previous maps
+
+            # Write the saved map back into origial map
+            for i in range(1, mapSize - 1):
+                for j in range(1, mapSize - 1):
+                    try:
+                        self.world[i][j] = tempWorld[i][j]
+                    except Exception as exception:
+                        pass
 
         # Draw new world
         self.drawWorld()
@@ -390,13 +410,14 @@ class GridRobotSim(tk.Tk):
 
     # Take grid x value and map to x
     def maptoX(self, mapx=0):
-        # TODO Explain these
+
+        # Generate the center of the squares based on half the frame height divide by the gridspace
         return int((mapx + (self.frameWidth // 2)) // self.gridSpace)
 
     # Take grid y value and map to y
     def maptoY(self, mapy=0):
 
-        # TODO Explain these
+        # Generate the center of the squares based on half the frame height divide by the gridspace
         return int((mapy + (self.frameHeight // 2)) // self.gridSpace)
 
     # Reinitialise world as empty world
@@ -412,7 +433,7 @@ class GridRobotSim(tk.Tk):
         # Redraw world
         self.drawWorld()
 
-# ------------------------------ UI Frame ---------------------------------------------------------
+    # ------------------------------ UI Frame ---------------------------------------------------------
 
     # Change the Brush array to only contain disabled on selected brush
     def setBrush(self, value):
@@ -503,7 +524,6 @@ class GridRobotSim(tk.Tk):
     # Update the simulation based on the timer
     def simtimer(self):
         while True:
-
             # Update ticks
             self.wait = True
             sleep(0.3 - self.delay / 50)
@@ -559,7 +579,7 @@ class GridRobotSim(tk.Tk):
         # Display the error label with passed String
         self.errorLabel.config(text=inputMsg)
 
-# ------------------------- Save Load --------------------------------------------------------
+    # ------------------------- Save Load --------------------------------------------------------
 
     # Compress list of objects using pickle and save as .map file
     def saveWorld(self):
@@ -594,7 +614,6 @@ class GridRobotSim(tk.Tk):
 
             # If the file does not have the .map extension add it
             if filename[-4:] != ".map":
-
                 filename += ".map"
 
             # UnPickel list of saved objects
@@ -644,7 +663,6 @@ class GridRobotSim(tk.Tk):
 
         # create/use Anonymous robot. Can only do one!
         if robname == "None":
-
             robname = "anon"
 
         # If robot with name does not already exist create one
@@ -906,7 +924,6 @@ class GridRobotSim(tk.Tk):
                         else:
 
                             if self.look(robname)[2] is None:
-
                                 self.moveForward(robname)
 
                     # If target y is lower and x is same as start
@@ -921,7 +938,6 @@ class GridRobotSim(tk.Tk):
                         else:
 
                             if self.look(robname)[2] is None:
-
                                 self.moveForward(robname)
 
                     # If target x is to the left and y is same as start
@@ -936,7 +952,6 @@ class GridRobotSim(tk.Tk):
 
                             # If facing correct direction move forward
                             if self.look(robname)[2] is None:
-
                                 self.moveForward(robname)
 
                     # If target x is to the right and y is same as start
@@ -951,7 +966,6 @@ class GridRobotSim(tk.Tk):
 
                             # If facing correct direction move forward
                             if self.look(robname)[2] is None:
-
                                 self.moveForward(robname)
 
                     # else begin move back to start
@@ -973,7 +987,6 @@ class GridRobotSim(tk.Tk):
 
                             # If facing correct direction move forward
                             if self.look(robname)[2] is None:
-
                                 self.moveForward(robname)
 
                     # If target y is lower and x is same as xloop
@@ -988,7 +1001,6 @@ class GridRobotSim(tk.Tk):
 
                             # If facing direction is correct move forward
                             if self.look(robname)[2] is None:
-
                                 self.moveForward(robname)
 
                     # If target x is to the left and y is equal to y loop
@@ -1003,7 +1015,6 @@ class GridRobotSim(tk.Tk):
 
                             # If facing the direction is correct move forward
                             if self.look(robname)[2] is None:
-
                                 self.moveForward(robname)
 
                     # If target x is to the right and y is equal to y loop
@@ -1018,7 +1029,6 @@ class GridRobotSim(tk.Tk):
 
                             # If facing direction is correct move forward
                             if self.look(robname)[2] is None:
-
                                 self.moveForward(robname)
 
                     # Else begin heading back to start
@@ -1049,12 +1059,10 @@ class GridRobotSim(tk.Tk):
         for i in range(xpos, loopx):
 
             if self.world[i][ypos] is not None:
-
                 self.setErrorMsg(("Path not clear: ", self.world[i][ypos], " At: X:", xpos, " Y:", ypos))
                 return False
 
             if self.world[i][loopy] is not None:
-
                 self.setErrorMsg(("Path not clear: ", self.world[i][loopy], " At: X:", xpos, " Y:", ypos))
                 return False
 
@@ -1062,12 +1070,10 @@ class GridRobotSim(tk.Tk):
         for j in range(ypos, loopy):
 
             if self.world[xpos][j] is not None:
-
                 self.setErrorMsg(("Path not clear: ", self.world[xpos][j], " At: X:", xpos, " Y:", ypos))
                 return False
 
             if self.world[loopx][j] is not None:
-
                 self.setErrorMsg(("Path not clear: ", self.world[loopx][j], " At: X:", xpos, " Y:", ypos))
                 return False
 
