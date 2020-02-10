@@ -33,6 +33,8 @@
 # Python 2 and 3 compatibility
 from __future__ import absolute_import, division, print_function
 
+from math import ceil
+
 try:
     test = raw_input  # Python 3 style input()
 
@@ -281,6 +283,16 @@ class GridRobotSim(tk.Tk):
 
                     self.clearGrid(ix, iy)
 
+        for robname in (self.robots.keys()):
+            if robname[:5] != "Drone":
+                self.newRobot(robname, self.maptoX(self.robots[robname].xcor()), self.maptoY(self.robots[robname].ycor()))
+
+            else:
+                # Remove "old" drone from World
+                self.world[self.maptoX(self.robots[robname].xcor()) + 1][
+                    self.maptoY(self.robots[robname].ycor()) + 1] = None
+                self.newDrone(self.drone[int(robname[5:])][0], self.drone[int(robname[5:])][1], self.drone[int(robname[5:])][2], self.drone[int(robname[5:])][3], robname)
+
     # Fill clicked on square based on brush
     def editGrid(self, mousex, mousey):
 
@@ -341,6 +353,8 @@ class GridRobotSim(tk.Tk):
 
                 # If so make new drone
                 self.newDrone(sx, sy, x, y)
+                # Change to end co-ords
+                self.droneBrushState = True
                 # Tell user whats up
                 self.displayDroneBrushMsg()
 
@@ -349,8 +363,8 @@ class GridRobotSim(tk.Tk):
                 # Reset start co-ords and tell user
                 self.droneBrushStart = 0, 0
 
-            # Change to end co-ords
-            self.droneBrushState = True
+                # Change to end co-ords
+                self.droneBrushState = True
 
     # Fill grid areas with scaled size to grid rectangles
     def fillGridWall(self, x, y):
@@ -401,7 +415,6 @@ class GridRobotSim(tk.Tk):
         return int((-self.frameWidth // 2) + (self.gridSpace / 2) + (x * self.gridSpace))
 
     # Take y value and map to grid y
-
     def ytoMap(self, y=0):
 
         # Find bottom side edge, Subtract half to get to the center of the square and then subtract amount of squares to
@@ -626,15 +639,15 @@ class GridRobotSim(tk.Tk):
                 self.mapSizeSlider.set(newWorld[1])
                 self.setMapSize(newWorld[1])
 
-                # Load world from file into local world variable
-                self.world = newWorld[0]
-
                 # Load drone array from file into local drone variable
                 self.drone = newWorld[2]
 
                 # Create drones from this array
                 for drone in list(self.drone):
-                    self.newDrone(drone[0], drone[1], drone[3], drone[4])
+                    self.newDrone(drone[0], drone[1], drone[2], drone[3])
+
+                # Load world from file into local world variable
+                self.world = newWorld[0]
 
             # Else check if its a V1 or V2 map
             else:
@@ -723,7 +736,7 @@ class GridRobotSim(tk.Tk):
             self.robots[robname].clear()
 
         # Scale the shape size based on the map size
-        self.robots[robname].shapesize(30 // self.mapSize, 30 // self.mapSize)
+        self.robots[robname].shapesize(ceil(30 / self.mapSize), ceil(30 / self.mapSize))
 
         self.robots[robname].speed(2)
         self.world[posx + 1][posy + 1] = robname
@@ -801,7 +814,7 @@ class GridRobotSim(tk.Tk):
 
         return "Robot name not found"
 
-    # tell robot with rname to turn righ
+    # tell robot with rname to turn right
     def turnRight(self, rName):
 
         # If robot exists
@@ -868,34 +881,105 @@ class GridRobotSim(tk.Tk):
 
         return "Robot name not found"
 
+    # If object in front of robot is not none or a wall "Pick" it up by removing it from the world
+    def pick(self, rName):
+        # If robot exists
+        if rName in self.robots:
+
+            # And is not broken
+            if self.robotStates[rName] != "Broken":
+
+                if self.look(rName)[2] in ('Goal', 'Food', 'Water'):
+
+                    # Get x, y and heading for the robot
+                    posx = self.maptoX(self.robots[rName].xcor())
+                    posy = self.maptoY(self.robots[rName].ycor())
+                    heading = int(self.robots[rName].heading())
+
+                    self.clearInfront(posx, posy, heading)
+
+                    return "OK"
+
+                else:
+                    return "Can't pick that up"
+
+            else:
+
+                return "Broken"
+
+        return "Robot name not found"
+
+    def clearInfront(self, posx, posy, heading):
+
+        if heading == 0:
+
+            self.clearGrid(posx + 1, posy)
+            self.world[posx + 2][posy + 1] = None
+
+        # North
+        elif heading == 90:
+
+            self.clearGrid(posx, posy + 1)
+            self.world[posx + 1][posy + 2] = None
+
+        # West
+        elif heading == 180:
+
+            self.clearGrid(posx - 1, posy)
+            self.world[posx][posy + 1] = None
+
+        # South
+        elif heading == 270:
+
+            self.clearGrid(posx, posy - 1)
+            self.world[posx + 1][posy] = None
+
     # --------------------------------- Drones -------------------------------------------------
 
-    def newDrone(self, xpos, ypos, loopx, loopy):
+    def newDrone(self, xpos, ypos, loopx, loopy, robname=None):
 
-        # If the path is clear
-        if self.checkPath(xpos, ypos, loopx, loopy):
+        if robname is not None:
+            name = robname
+        else:
+            # If the path is clear
+            if self.checkPath(xpos, ypos, loopx, loopy):
 
-            # Iterate on drone name and set as name
-            name = self.generateDroneName()
+                # Iterate on drone name and set as name
+                name = self.generateDroneName()
 
-            # If array index exists
-            try:
+                # If array index exists
+                try:
 
-                # Save data
-                self.drone[int(name[5:])][0] = xpos
-                self.drone[int(name[5:])][1] = ypos
-                self.drone[int(name[5:])][2] = loopx
-                self.drone[int(name[5:])][3] = loopy
-                self.drone[int(name[5:])][4] = True
-                self.drone[int(name[5:])][5] = True
+                    # Save data
+                    self.drone[int(name[5:])][0] = xpos
+                    self.drone[int(name[5:])][1] = ypos
+                    self.drone[int(name[5:])][2] = loopx
+                    self.drone[int(name[5:])][3] = loopy
+                    self.drone[int(name[5:])][4] = True
+                    self.drone[int(name[5:])][5] = True
 
-            except Exception as exception:
+                except Exception as exception:
 
-                # Else append element contains data
-                self.drone.append([xpos, ypos, loopx, loopy, True, True])
+                    # Else append element contains data
+                    self.drone.append([xpos, ypos, loopx, loopy, True, True])
 
-            # Create robot with new saved parameters
-            self.newRobot(name, self.drone[int(name[5:])][0], self.drone[int(name[5:])][1], "Pink")
+        # Create robot with new saved parameters
+        self.newRobot(name, self.drone[int(name[5:])][0], self.drone[int(name[5:])][1], "Pink")
+
+    # Make the drones run forward if it is none or they can see themsleves
+    def droneForward(self, robname):
+
+        # Get x, y and heading for the robot
+        posx = self.maptoX(self.robots[robname].xcor())
+        posy = self.maptoY(self.robots[robname].ycor())
+        heading = int(self.robots[robname].heading())
+
+        # Check the square infront to see if the self named square bug is here (Gotta be a better way to fix this)
+        if self.look(robname)[2] is robname:
+            self.clearInfront(posx, posy, heading)
+
+        if self.look(robname)[2] is None:
+            self.moveForward(robname)
 
     # Make the drones run a loop from there start to there end coords and back again
     def runDrones(self):
@@ -923,8 +1007,7 @@ class GridRobotSim(tk.Tk):
                         # If facing correct direction move forward
                         else:
 
-                            if self.look(robname)[2] is None:
-                                self.moveForward(robname)
+                            self.droneForward(robname)
 
                     # If target y is lower and x is same as start
                     elif y > self.drone[int(robname[5:])][3] and x == self.drone[int(robname[5:])][0]:
@@ -937,8 +1020,7 @@ class GridRobotSim(tk.Tk):
                         # If facing correct direction move forward
                         else:
 
-                            if self.look(robname)[2] is None:
-                                self.moveForward(robname)
+                            self.droneForward(robname)
 
                     # If target x is to the left and y is same as start
                     elif y == self.drone[int(robname[5:])][3] and x > self.drone[int(robname[5:])][2]:
@@ -951,8 +1033,7 @@ class GridRobotSim(tk.Tk):
                         else:
 
                             # If facing correct direction move forward
-                            if self.look(robname)[2] is None:
-                                self.moveForward(robname)
+                            self.droneForward(robname)
 
                     # If target x is to the right and y is same as start
                     elif y == self.drone[int(robname[5:])][3] and x < self.drone[int(robname[5:])][2]:
@@ -965,8 +1046,7 @@ class GridRobotSim(tk.Tk):
                         else:
 
                             # If facing correct direction move forward
-                            if self.look(robname)[2] is None:
-                                self.moveForward(robname)
+                            self.droneForward(robname)
 
                     # else begin move back to start
                     else:
@@ -986,8 +1066,7 @@ class GridRobotSim(tk.Tk):
                         else:
 
                             # If facing correct direction move forward
-                            if self.look(robname)[2] is None:
-                                self.moveForward(robname)
+                            self.droneForward(robname)
 
                     # If target y is lower and x is same as xloop
                     elif y > self.drone[int(robname[5:])][1] and x == self.drone[int(robname[5:])][2]:
@@ -1000,8 +1079,7 @@ class GridRobotSim(tk.Tk):
                         else:
 
                             # If facing direction is correct move forward
-                            if self.look(robname)[2] is None:
-                                self.moveForward(robname)
+                            self.droneForward(robname)
 
                     # If target x is to the left and y is equal to y loop
                     elif y == self.drone[int(robname[5:])][1] and x > self.drone[int(robname[5:])][0]:
@@ -1014,8 +1092,7 @@ class GridRobotSim(tk.Tk):
                         else:
 
                             # If facing the direction is correct move forward
-                            if self.look(robname)[2] is None:
-                                self.moveForward(robname)
+                            self.droneForward(robname)
 
                     # If target x is to the right and y is equal to y loop
                     elif y == self.drone[int(robname[5:])][1] and x < self.drone[int(robname[5:])][0]:
@@ -1028,8 +1105,7 @@ class GridRobotSim(tk.Tk):
                         else:
 
                             # If facing direction is correct move forward
-                            if self.look(robname)[2] is None:
-                                self.moveForward(robname)
+                            self.droneForward(robname)
 
                     # Else begin heading back to start
                     else:
@@ -1159,6 +1235,8 @@ class GridRobotSim(tk.Tk):
                     rmsg = str(self.look(msg[1]))
                 elif msg[0] == "P":
                     rmsg = self.getXYpos(msg[1])
+                elif msg[0] == "U":
+                    rmsg = self.pick(msg[1])
                 else:
                     rmsg = "Unknown command"
             except Exception as exception:
