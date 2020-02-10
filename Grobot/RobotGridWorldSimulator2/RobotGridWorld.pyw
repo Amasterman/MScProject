@@ -891,12 +891,7 @@ class GridRobotSim(tk.Tk):
 
                 if self.look(rName)[2] in ('Goal', 'Food', 'Water'):
 
-                    # Get x, y and heading for the robot
-                    posx = self.maptoX(self.robots[rName].xcor())
-                    posy = self.maptoY(self.robots[rName].ycor())
-                    heading = int(self.robots[rName].heading())
-
-                    self.clearInfront(posx, posy, heading)
+                    self.clearInfront(self.maptoX(self.robots[rName].xcor()), self.maptoY(self.robots[rName].ycor()), int(self.robots[rName].heading()))
 
                     return "OK"
 
@@ -909,31 +904,77 @@ class GridRobotSim(tk.Tk):
 
         return "Robot name not found"
 
-    def clearInfront(self, posx, posy, heading):
+    def place(self, rName, placeType):
 
+        # If robot exists
+        if rName in self.robots:
+
+            # And is not broken
+            if self.robotStates[rName] != "Broken":
+
+                posx, posy = self.findForward(self.maptoX(self.robots[rName].xcor()), self.maptoY(self.robots[rName].ycor()), int(self.robots[rName].heading()))
+
+                if self.world[posx, posy] is None:
+
+                    if placeType == "F":
+
+                        self.fillGridFood(posx, posy)
+                        self.world[posx + 1][posy + 1] = "Food"
+
+                    elif placeType == "W":
+
+                        self.fillGridWater(posx, posy)
+                        self.world[posx + 1][posy + 1] = "Water"
+
+                    elif placeType == "G":
+
+                        self.fillGridGoal(posx, posy)
+                        self.world[posx + 1][posy + 1] = "Goal"
+
+                    else:
+                        return "Unkown object"
+
+                    return "Ok"
+                else:
+                    return "Cannot place object there"
+
+            else:
+
+                return "Broken"
+
+        return "Robot name not found"
+
+    def findForward(self, posx, posy, heading):
+
+        # East
         if heading == 0:
 
-            self.clearGrid(posx + 1, posy)
-            self.world[posx + 2][posy + 1] = None
+            return posx + 1, posy
 
         # North
         elif heading == 90:
 
-            self.clearGrid(posx, posy + 1)
-            self.world[posx + 1][posy + 2] = None
+            return posx, posy + 1
 
         # West
         elif heading == 180:
 
-            self.clearGrid(posx - 1, posy)
-            self.world[posx][posy + 1] = None
+            return posx - 1, posy
 
         # South
         elif heading == 270:
 
-            self.clearGrid(posx, posy - 1)
-            self.world[posx + 1][posy] = None
+            return posx, posy - 1
 
+    def clearInfront(self, posx, posy, heading):
+
+        # Find positions for infront of drone
+        nposx, nposy = self.findForward(posx,posy,heading)
+
+        # Clear space infront of drone
+        self.clearGrid(nposx, nposy)
+        self.world[nposx + 1][nposy + 1] = None
+        
     # --------------------------------- Drones -------------------------------------------------
 
     def newDrone(self, xpos, ypos, loopx, loopy, robname=None):
