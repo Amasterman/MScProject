@@ -33,8 +33,6 @@
 # Python 2 and 3 compatibility
 from __future__ import absolute_import, division, print_function
 
-
-
 try:
     test = raw_input  # Python 3 style input()
 
@@ -54,7 +52,6 @@ except Exception as e:
     import tkMessageBox as Mb
 
 # Standard imports
-from math import ceil
 import numpy
 from numpy.linalg import norm
 from threading import Thread
@@ -98,7 +95,7 @@ class GridRobotSim(tk.Tk):
 
         # Initialise frame window and name
         tk.Tk.__init__(self, master)
-        tk.Tk.title(self, "RobotGridWorld V2")
+        tk.Tk.title(self, "RobotGridWorld V3")
 
         # Initialise drone target array
         self.drone = [[0, 0, 0, 0, True, False]]
@@ -202,15 +199,13 @@ class GridRobotSim(tk.Tk):
         # Only update if there is a change
         if self.mapSizeSlider.get() != self.mapSize:
 
+            # Save a temporary instance of the map
             tempWorld = self.world
-            tempMapsize = self.mapSize
 
-            # clear boundary walls: 0,0 to mapSize,mapSize
+            # clear boundary walls that would be in the new world area in the saved copy
             mapSize = len(self.world) - 1
             for n in range(0, mapSize):
-                tempWorld[0][n] = "None"
                 tempWorld[mapSize - 1][n] = "None"
-                tempWorld[n][0] = "None"
                 tempWorld[n][mapSize - 1] = "None"
             tempWorld[mapSize - 1][mapSize - 1] = "None"
 
@@ -222,9 +217,10 @@ class GridRobotSim(tk.Tk):
             # Make world at new size
             self.world = [[None] * (self.mapSize + 3) for i in range(self.mapSize + 3)]
 
-            # Write the saved map back into origial map
+            # Write the saved map back into original map
             for i in range(1, mapSize - 1):
                 for j in range(1, mapSize - 1):
+                    # If out of range catch exception and ignore it
                     try:
                         self.world[i][j] = tempWorld[i][j]
                     except Exception as exception:
@@ -240,19 +236,25 @@ class GridRobotSim(tk.Tk):
         self.canvas.delete("all")
         count = 0
 
-        # Vertical lines
+        # Vertical lines, With steps = to gridspace
         for i in range(-self.frameHeight // 2, self.frameHeight // 2 - 1, self.gridSpace):
-            self.canvas.create_line(i, self.frameHeight // 2, i, -self.frameWidth // 2, dash=(2, 4))
-            self.canvas.create_text(i + 10, self.frameHeight // 2 - 10, text=str(count), font=("courier", 6),
-                                    fill="red")
+
+            # Dont draw 0 on vertical to prevent drawing two zeros
+            if count != 0:
+                self.canvas.create_line(i, self.frameHeight // 2, i, -self.frameWidth // 2, dash=(2, 4))
+                self.canvas.create_text(i + 10, self.frameHeight // 2 - 10, text=str(count), font=("courier", 6),
+                                        fill="red")
             count += 1
 
-        # Horizontal lines
+        # Reset count
         count = self.frameHeight // self.gridSpace
+
+        # Horizontal lines With steps = to gridspace
         for i in range(-self.frameWidth // 2, self.frameWidth // 2 - 1, self.gridSpace):
             self.canvas.create_line(-self.frameWidth // 2, i, self.frameHeight // 2, i, dash=(2, 4))
             self.canvas.create_text(-self.frameWidth // 2 + 10, i + 12, text=str(int(count - 1)), font=("courier", 6),
                                     fill="red")
+
             count -= 1
 
         # Set boundary walls: 0,0 to mapSize,mapSize
@@ -286,15 +288,25 @@ class GridRobotSim(tk.Tk):
 
                     self.clearGrid(ix, iy)
 
+        # Redraw all robots and reinitialise any drones
         for robname in (self.robots.keys()):
-            if robname[:5] != "Drone":
-                self.newRobot(robname, self.maptoX(self.robots[robname].xcor()), self.maptoY(self.robots[robname].ycor()))
 
+            # If the robot is not a drone then remake
+            if robname[:5] != "Drone":
+
+                self.newRobot(robname, self.maptoX(self.robots[robname].xcor()),
+                              self.maptoY(self.robots[robname].ycor()))
+
+            # If it is a drone then remove it from the world and restart it from its start coords
+            # This will not make the drone if the end coords are no longer in the range of the world
             else:
+
                 # Remove "old" drone from World
                 self.world[self.maptoX(self.robots[robname].xcor()) + 1][
                     self.maptoY(self.robots[robname].ycor()) + 1] = None
-                self.newDrone(self.drone[int(robname[5:])][0], self.drone[int(robname[5:])][1], self.drone[int(robname[5:])][2], self.drone[int(robname[5:])][3], robname)
+
+                self.newDrone(self.drone[int(robname[5:])][0], self.drone[int(robname[5:])][1],
+                              self.drone[int(robname[5:])][2], self.drone[int(robname[5:])][3], robname)
 
     # Fill clicked on square based on brush
     def editGrid(self, mousex, mousey):
@@ -336,6 +348,7 @@ class GridRobotSim(tk.Tk):
 
     # Decide on actions for drone brush
     def droneBrushHandler(self, x, y):
+
         # If start co-ords
         if self.droneBrushState:
 
@@ -471,6 +484,7 @@ class GridRobotSim(tk.Tk):
         # Update the display message with the drone brush info
         self.displayDroneBrushMsg()
 
+    # If the drone brush is selected show associated massage
     def displayDroneBrushMsg(self):
 
         # If brush is selected
@@ -743,7 +757,7 @@ class GridRobotSim(tk.Tk):
             self.robots[robname].clear()
 
         # Scale the shape size based on the map size
-        self.robots[robname].shapesize(ceil(30 / self.mapSize), ceil(30 / self.mapSize))
+        self.robots[robname].shapesize(30 / self.mapSize, 30 / self.mapSize)
 
         self.robots[robname].speed(2)
         self.world[posx + 1][posy + 1] = robname
@@ -896,9 +910,12 @@ class GridRobotSim(tk.Tk):
             # And is not broken
             if self.robotStates[rName] != "Broken":
 
+                # If one of the allowable pick objects (not None or robots)
                 if self.look(rName)[2] in ('Goal', 'Food', 'Water', 'Wall'):
 
-                    self.clearInfront(self.maptoX(self.robots[rName].xcor()), self.maptoY(self.robots[rName].ycor()), int(self.robots[rName].heading()))
+                    # Remove graphical and world data in square infront
+                    self.clearInfront(self.maptoX(self.robots[rName].xcor()), self.maptoY(self.robots[rName].ycor()),
+                                      int(self.robots[rName].heading()))
 
                     return "OK"
 
@@ -911,6 +928,7 @@ class GridRobotSim(tk.Tk):
 
         return "Robot name not found"
 
+    # Place in the world a square of specified type
     def place(self, rName, placeType):
 
         # If robot exists
@@ -919,30 +937,38 @@ class GridRobotSim(tk.Tk):
             # And is not broken
             if self.robotStates[rName] != "Broken":
 
-                posx, posy = self.findForward(self.maptoX(self.robots[rName].xcor()), self.maptoY(self.robots[rName].ycor()), int(self.robots[rName].heading()))
+                # Take x y coords and find what posx and posy coords infront of the robot are
+                posx, posy = self.findForward(self.maptoX(self.robots[rName].xcor()),
+                                              self.maptoY(self.robots[rName].ycor()), int(self.robots[rName].heading()))
 
+                # If it is clear ahead
                 if self.world[posx][posy] is None:
 
+                    # If type is food set the graphical and world data to food
                     if placeType == "Food":
 
                         self.fillGridFood(posx, posy)
                         self.world[posx + 1][posy + 1] = "Food"
 
+                    # If type is water set the graphical and world data to water
                     elif placeType == "Water":
 
                         self.fillGridWater(posx, posy)
                         self.world[posx + 1][posy + 1] = "Water"
 
+                    # If type is goal set the graphical and world data to goal
                     elif placeType == "Goal":
 
                         self.fillGridGoal(posx, posy)
                         self.world[posx + 1][posy + 1] = "Goal"
 
+                    # If type is wall set the graphical and world data to wall
                     elif placeType == "Wall":
 
                         self.fillGridWall(posx, posy)
                         self.world[posx + 1][posy + 1] = "Wall"
 
+                    # If type is not known return that
                     else:
                         return "Unkown object"
 
@@ -956,59 +982,77 @@ class GridRobotSim(tk.Tk):
 
         return "Robot name not found"
 
+    # Search in an increasing area for specific object
     def nearest(self, robname, target):
 
+        # Get robots x y coords
         x, y = self.maptoX(self.robots[robname].xcor()), self.maptoY(self.robots[robname].ycor())
+
+        # Initialize vars
         nearest = None
         dist = 3
         found = False
 
+        # While nothing is found
         while nearest is None:
-            # For each iteration move the start coords to the top right
+
+            # For each iteration move the start coords to the bottom right
             if (x - 1 > 0) and (y - 1 > 0):
-                x, y = x - 1, y + 1
+                x, y = x - 1, y - 1
             else:
                 x, y = 0, 0
 
             # Iterate throught the range defined and find any instances of target
             for i in range(0, dist):
                 for j in range(0, dist):
+
                     # Check if square is in world size
                     if 0 <= (x + i) <= self.mapSize and 0 <= (y + i) <= self.mapSize:
 
                         # Check if square is target
-                        print(x + i , y + j)
+                        print(x + i, y + j)
                         print(self.world[x + i][y + j])
 
+                        # Only check the outermost squares of the area as all the inner squares will have been checked
                         if j == y or j == dist - 1:
+
+                            # If an instance of a target is found set found true
                             if self.world[x + i][j] == target:
                                 found = True
+
                         elif i == x or i == dist - 1:
+
+                            # If an instance of a target is found set found true
                             if self.world[i][y + j] == target:
                                 found = True
 
                         if found:
+
                             # If nearest has been set
                             if nearest is not None:
 
-                                # If its norm (vector distance is smaller set as new nearest
+                                # If its norm vector distance is smaller set as new nearest
                                 if numpy.linalg.norm(nearest) > numpy.linalg.norm([x + i, y + j]):
                                     nearest = x + i - 1, y + j - 1
-                            else:
-                                    nearest = x + i - 1, y + j - 1
-                found = False
 
-            # if x and y hit both edges and havent been found return not found
+                            else:
+
+                                # Save coords as nearest
+                                nearest = x + i - 1, y + j - 1
+
+            # if x and y hit both edges and haven't been found return not found
             if (x == 0 and x + dist > self.mapSize) and (y == 0 and y + dist > self.mapSize):
                 return "Not found"
 
             # If a nearest has been found return it
+            # TODO Possibly return dist x dist y insted
             if nearest is not None:
                 return nearest
 
             # Increment the distance
             dist += 1
 
+    # Take x y and heading coords and find what coords dictate "in front" of it
     def findForward(self, posx, posy, heading):
 
         # East
@@ -1031,21 +1075,25 @@ class GridRobotSim(tk.Tk):
 
             return posx, posy - 1
 
+    # Clear graphical and world data from in front of provided coords and heading
     def clearInfront(self, posx, posy, heading):
 
-        # Find positions for infront of drone
-        nposx, nposy = self.findForward(posx,posy,heading)
+        # Find positions for in front of drone
+        nposx, nposy = self.findForward(posx, posy, heading)
 
-        # Clear space infront of robot
+        # Clear space in front of robot
         self.clearGrid(nposx, nposy)
         self.world[nposx + 1][nposy + 1] = None
 
     # --------------------------------- Drones -------------------------------------------------
 
+    # Create a robot that moves from provided start to end points in a loop
     def newDrone(self, xpos, ypos, loopx, loopy, robname=None):
 
+        # Check if robot has been provided a name
         if robname is not None:
             name = robname
+
         else:
             # If the path is clear
             if self.checkPath(xpos, ypos, loopx, loopy):
@@ -1072,7 +1120,7 @@ class GridRobotSim(tk.Tk):
         # Create robot with new saved parameters
         self.newRobot(name, self.drone[int(name[5:])][0], self.drone[int(name[5:])][1], "Pink")
 
-    # Make the drones run forward if it is none or they can see themsleves
+    # Make the drones run forward if it is none or they can see themselves
     def droneForward(self, robname):
 
         # Get x, y and heading for the robot
@@ -1080,10 +1128,11 @@ class GridRobotSim(tk.Tk):
         posy = self.maptoY(self.robots[robname].ycor())
         heading = int(self.robots[robname].heading())
 
-        # Check the square infront to see if the self named square bug is here (Gotta be a better way to fix this)
+        # Check the square in front to see if the self named square bug is here (Gotta be a better way to fix this)
         if self.look(robname)[2] is robname:
             self.clearInfront(posx, posy, heading)
 
+        # If clear ahead move forward
         if self.look(robname)[2] is None:
             self.moveForward(robname)
 
@@ -1275,39 +1324,62 @@ class GridRobotSim(tk.Tk):
         passw = ""
         tcpSock = None
         tcpOk = 0
+
         try:
+
             # Create IP socket and wait for customers
             tcpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
         except Exception as exception:
+
             print("Error creating socket")
+
         print("Please wait: Binding address to socket")
+
         # Bug fix for Mac - C ontributed by Jamie Hollaway
         tcpSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
         self.setErrorMsg("Please Wait: Setting up Connection")
+
         while tcpOk == 0:
+
             try:
+
                 tcpSock.bind(("localhost", 9001))
                 tcpSock.listen(3)
                 tcpOk = 1
+
             except Exception as exception:
+
                 sleep(1.0)  # Keep trying!
+
         print("Socket ready now")
+
         self.setErrorMsg("")
+
         # make sure socket closes at eop
         atexit.register(tcpSock.close)
         atexit.register(tcpSock.shutdown, 1)
+
         msg = ""
+
         while tcpOk == 1:
+
             # when customer calls, service requests
             cli_sock, cli_ipAdd = tcpSock.accept()
+
             try:
+
                 # python 3
                 thrd = Thread(target=self.despatch, args=(cli_sock,))
                 thrd.daemon = True
                 thrd.start()
+
             except Exception as exception:
+
                 # raise # debug
                 print("Warning TCP/IP Error")  # Just keep on with next request
+
         # Clean up if this point ever reached
         tcpSock.shutdown(1)
         tcpSock.close()
@@ -1316,64 +1388,88 @@ class GridRobotSim(tk.Tk):
     def despatch(self, cli_sock):
         msg = ""
         rmsg = ""
+
         # Recive input and pass to eval
         # print("Connected") # Debug
         msg = cli_sock.recv(50).decode('utf-8')
         print("*" + msg)  # debug
+
         if msg != "Q":
+
             msg = msg.split()  # parse
             # for i in msg: print(i) #debug
 
             # Do robot commands
             try:
+
                 if msg[0] == "N":
+
                     # print(msg) #debug
                     # New or init robot
                     rmsg = self.newRobot(msg[1], int(msg[2]), int(msg[3]), msg[4], msg[5])
+
                 elif msg[0] == "F":
+
                     # msg[1] is robot name
                     rmsg = self.moveForward(msg[1])
+
                 elif msg[0] == "R":
                     rmsg = self.turnRight(msg[1])
+
                 elif msg[0] == "L":
                     rmsg = self.turnLeft(msg[1])
+
                 elif msg[0] == "S":
                     rmsg = str(self.look(msg[1]))
+
                 elif msg[0] == "P":
                     rmsg = self.getXYpos(msg[1])
+
                 elif msg[0] == "U":
                     rmsg = self.pick(msg[1])
+
                 elif msg[0] == "HF":
                     rmsg = self.place(msg[1], "Food")
+
                 elif msg[0] == "HWT":
                     rmsg = self.place(msg[1], "Wall")
+
                 elif msg[0] == "HG":
                     rmsg = self.place(msg[1], "Goal")
+
                 elif msg[0] == "HW":
                     rmsg = self.place(msg[1], "Wall")
+
                 elif msg[0] == "DW":
                     rmsg = self.nearest(msg[1], "Wall")
+
                 elif msg[0] == "DF":
                     rmsg = self.nearest(msg[1], "Food")
+
                 elif msg[0] == "DWT":
                     rmsg = self.nearest(msg[1], "Water")
+
                 elif msg[0] == "DG":
                     rmsg = self.nearest(msg[1], "Goal")
 
                 else:
                     rmsg = "Unknown command"
+
             except Exception as exception:
-                print(exception)
+
                 # raise #debug. If error just carry on
                 rmsg = "Server Error"
 
             if rmsg is None:
+
                 rmsg == "None"
             # print(rmsg, type(rmsg))# debug
+
             # Wait here for step timer
             while self.wait:
                 sleep(0.01)
             cli_sock.send(str(rmsg).encode('utf-8'))
+
         # print("Connection Closed")# debug
         cli_sock.close()
         return
