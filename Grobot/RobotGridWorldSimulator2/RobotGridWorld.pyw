@@ -33,7 +33,7 @@
 # Python 2 and 3 compatibility
 from __future__ import absolute_import, division, print_function
 
-from math import ceil
+
 
 try:
     test = raw_input  # Python 3 style input()
@@ -54,6 +54,9 @@ except Exception as e:
     import tkMessageBox as Mb
 
 # Standard imports
+from math import ceil
+import numpy
+from numpy.linalg import norm
 from threading import Thread
 from time import sleep
 import turtle as rbt
@@ -642,9 +645,13 @@ class GridRobotSim(tk.Tk):
                 # Load drone array from file into local drone variable
                 self.drone = newWorld[2]
 
-                # Create drones from this array
-                for drone in list(self.drone):
-                    self.newDrone(drone[0], drone[1], drone[2], drone[3])
+                try:
+                    # Create drones from this array
+                    for drone in list(self.drone):
+                        self.newDrone(drone[0], drone[1], drone[2], drone[3])
+
+                except Exception as exception:
+                    pass
 
                 # Load world from file into local world variable
                 self.world = newWorld[0]
@@ -889,7 +896,7 @@ class GridRobotSim(tk.Tk):
             # And is not broken
             if self.robotStates[rName] != "Broken":
 
-                if self.look(rName)[2] in ('Goal', 'Food', 'Water'):
+                if self.look(rName)[2] in ('Goal', 'Food', 'Water', 'Wall'):
 
                     self.clearInfront(self.maptoX(self.robots[rName].xcor()), self.maptoY(self.robots[rName].ycor()), int(self.robots[rName].heading()))
 
@@ -914,22 +921,27 @@ class GridRobotSim(tk.Tk):
 
                 posx, posy = self.findForward(self.maptoX(self.robots[rName].xcor()), self.maptoY(self.robots[rName].ycor()), int(self.robots[rName].heading()))
 
-                if self.world[posx, posy] is None:
+                if self.world[posx][posy] is None:
 
-                    if placeType == "F":
+                    if placeType == "Food":
 
                         self.fillGridFood(posx, posy)
                         self.world[posx + 1][posy + 1] = "Food"
 
-                    elif placeType == "W":
+                    elif placeType == "Water":
 
                         self.fillGridWater(posx, posy)
                         self.world[posx + 1][posy + 1] = "Water"
 
-                    elif placeType == "G":
+                    elif placeType == "Goal":
 
                         self.fillGridGoal(posx, posy)
                         self.world[posx + 1][posy + 1] = "Goal"
+
+                    elif placeType == "Wall":
+
+                        self.fillGridWall(posx, posy)
+                        self.world[posx + 1][posy + 1] = "Wall"
 
                     else:
                         return "Unkown object"
@@ -943,6 +955,59 @@ class GridRobotSim(tk.Tk):
                 return "Broken"
 
         return "Robot name not found"
+
+    def nearest(self, robname, target):
+
+        x, y = self.maptoX(self.robots[robname].xcor()), self.maptoY(self.robots[robname].ycor())
+        nearest = None
+        dist = 3
+        found = False
+
+        while nearest is None:
+            # For each iteration move the start coords to the top right
+            if (x - 1 > 0) and (y - 1 > 0):
+                x, y = x - 1, y + 1
+            else:
+                x, y = 0, 0
+
+            # Iterate throught the range defined and find any instances of target
+            for i in range(0, dist):
+                for j in range(0, dist):
+                    # Check if square is in world size
+                    if 0 <= (x + i) <= self.mapSize and 0 <= (y + i) <= self.mapSize:
+
+                        # Check if square is target
+                        print(x + i , y + j)
+                        print(self.world[x + i][y + j])
+
+                        if j == y or j == dist - 1:
+                            if self.world[x + i][j] == target:
+                                found = True
+                        elif i == x or i == dist - 1:
+                            if self.world[i][y + j] == target:
+                                found = True
+
+                        if found:
+                            # If nearest has been set
+                            if nearest is not None:
+
+                                # If its norm (vector distance is smaller set as new nearest
+                                if numpy.linalg.norm(nearest) > numpy.linalg.norm([x + i, y + j]):
+                                    nearest = x + i - 1, y + j - 1
+                            else:
+                                    nearest = x + i - 1, y + j - 1
+                found = False
+
+            # if x and y hit both edges and havent been found return not found
+            if (x == 0 and x + dist > self.mapSize) and (y == 0 and y + dist > self.mapSize):
+                return "Not found"
+
+            # If a nearest has been found return it
+            if nearest is not None:
+                return nearest
+
+            # Increment the distance
+            dist += 1
 
     def findForward(self, posx, posy, heading):
 
@@ -971,10 +1036,10 @@ class GridRobotSim(tk.Tk):
         # Find positions for infront of drone
         nposx, nposy = self.findForward(posx,posy,heading)
 
-        # Clear space infront of drone
+        # Clear space infront of robot
         self.clearGrid(nposx, nposy)
         self.world[nposx + 1][nposy + 1] = None
-        
+
     # --------------------------------- Drones -------------------------------------------------
 
     def newDrone(self, xpos, ypos, loopx, loopy, robname=None):
@@ -1278,9 +1343,27 @@ class GridRobotSim(tk.Tk):
                     rmsg = self.getXYpos(msg[1])
                 elif msg[0] == "U":
                     rmsg = self.pick(msg[1])
+                elif msg[0] == "HF":
+                    rmsg = self.place(msg[1], "Food")
+                elif msg[0] == "HWT":
+                    rmsg = self.place(msg[1], "Wall")
+                elif msg[0] == "HG":
+                    rmsg = self.place(msg[1], "Goal")
+                elif msg[0] == "HW":
+                    rmsg = self.place(msg[1], "Wall")
+                elif msg[0] == "DW":
+                    rmsg = self.nearest(msg[1], "Wall")
+                elif msg[0] == "DF":
+                    rmsg = self.nearest(msg[1], "Food")
+                elif msg[0] == "DWT":
+                    rmsg = self.nearest(msg[1], "Water")
+                elif msg[0] == "DG":
+                    rmsg = self.nearest(msg[1], "Goal")
+
                 else:
                     rmsg = "Unknown command"
             except Exception as exception:
+                print(exception)
                 # raise #debug. If error just carry on
                 rmsg = "Server Error"
 

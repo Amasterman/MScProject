@@ -240,7 +240,7 @@ class NewRobot():
         return self._send("N " + self.rname+" "+str(self.xpos)+" "+str(self.ypos)+" "+self.colour+" "+ self.rshape)
 
     def right(self):
-        return self._send("R "+ self.rname+" ")
+        return self._send("R " + self.rname+" ")
 
     def left(self):
         return self._send("L " + self.rname+" ")
@@ -255,6 +255,45 @@ class NewRobot():
 
     def forward(self):
         return self._send("F " + self.rname)
+
+    def pick(self):
+        return self._send("U " + self.rname)
+
+    def place(self, type):
+
+        if type == "Food":
+            return self._send("HF " + self.rname)
+
+        elif type == "Water":
+            return self._send("HWT " + self.rname)
+
+        elif type == "Goal":
+            return self._send("HG " + self.rname)
+
+        elif type == "Wall":
+            return self._send("HW " + self.rname)
+
+        else:
+            return "Type not known"
+
+    def nearest(self, type):
+
+        if type == "Food":
+            return self._send("DF " + self.rname)
+
+        elif type == "Water":
+            return self._send("DWT " + self.rname)
+
+        elif type == "Goal":
+            return self._send("DG " + self.rname)
+
+        elif type == "Wall":
+            return self._send("DW " + self.rname)
+
+        else:
+            return "Type not known"
+
+
 
 
 
@@ -296,7 +335,11 @@ def demo2():
     print("Arthur looks at:", arthur.look())
     print("ted looks at:", ted.look())
 
+def demo3():
+    arthur = NewRobot("arthur", 1, 4, "blue")
+    print("Arthur Place: ", arthur.place("Food"))
+
 if __name__ == "__main__":
-    demo()
+    demo3()
     print("Finished")
 
