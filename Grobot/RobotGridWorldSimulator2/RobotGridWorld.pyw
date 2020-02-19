@@ -186,6 +186,9 @@ class GridRobotSim(tk.Tk):
         self.timerTrd.daemon = True
         self.timerTrd.start()
 
+        # Tick counter
+        self.ticks = 0
+
     # -------------------------------- Mapping ---------------------------------------------------
 
     # Take in the desired mapSize and calculate the size of grid need to accommodate
@@ -562,6 +565,9 @@ class GridRobotSim(tk.Tk):
 
             # Update drones
             self.runDrones()
+
+            # Update Ticks
+            self.ticks += 1
 
             # Bug fix - Jamie Hollaway
             # Stops window freezing when not in focus
@@ -1451,6 +1457,9 @@ class GridRobotSim(tk.Tk):
 
                 elif msg[0] == "DG":
                     rmsg = self.nearest(msg[1], "Goal")
+
+                elif msg[0] == "TI":
+                    rmsg = self.ticks
 
                 else:
                     rmsg = "Unknown command"
