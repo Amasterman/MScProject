@@ -4,21 +4,9 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e96dec6-8d42-4a21-9fc7-d731c507b52a" name="Default Changelist" comment="Began work on Embodied robot API, a child class of grobot that implements homeostatic variables and noise in sensor input and motor output based on overall wellbeing of the robot">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/__init__.py" afterDir="false" />
+    <list default="true" id="6e96dec6-8d42-4a21-9fc7-d731c507b52a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/RemoteControl.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/RemoteControl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/embodiedGRobot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/grobot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/grobot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/mazeSolve.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/mazeSolve.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/navigate.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/navigate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/simpleRC.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/simpleRC.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -219,7 +207,9 @@
       <workItem from="1581950629267" duration="9093000" />
       <workItem from="1582031295883" duration="174000" />
       <workItem from="1582033794343" duration="3987000" />
-      <workItem from="1582121035312" duration="2333000" />
+      <workItem from="1582121035312" duration="3943000" />
+      <workItem from="1582566822446" duration="309000" />
+      <workItem from="1582567342842" duration="302000" />
     </task>
     <task id="LOCAL-00001" summary="Inital Test Commit">
       <created>1580310130169</created>
@@ -340,7 +330,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581959275284</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Slightly restructured file system&#10;added ticks to sim and robots&#10;added running mean, variability and standard deviation to embodiedGrobot API">
+      <created>1582123474481</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1582123474482</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -364,7 +361,8 @@
     <MESSAGE value="Added allowing pick and place of walls, if user does not want this functionality then its up to them to define it&#10;&#10;Added a nearest search function, currently returns coords of searched for object, could make return distance&#10;&#10;Added Pick, place and Nearest to the Grobot API" />
     <MESSAGE value="Comment pass" />
     <MESSAGE value="Began work on Embodied robot API, a child class of grobot that implements homeostatic variables and noise in sensor input and motor output based on overall wellbeing of the robot" />
-    <option name="LAST_COMMIT_MESSAGE" value="Began work on Embodied robot API, a child class of grobot that implements homeostatic variables and noise in sensor input and motor output based on overall wellbeing of the robot" />
+    <MESSAGE value="Slightly restructured file system&#10;added ticks to sim and robots&#10;added running mean, variability and standard deviation to embodiedGrobot API" />
+    <option name="LAST_COMMIT_MESSAGE" value="Slightly restructured file system&#10;added ticks to sim and robots&#10;added running mean, variability and standard deviation to embodiedGrobot API" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="189" width="806" height="675" key="#Inspections" timestamp="1580311266164">
@@ -391,10 +389,10 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="705" y="386" width="506" height="280" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1053@0.0.1920.1053" timestamp="1580741940011" />
-    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2" timestamp="1581959351176">
+    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2" timestamp="1582123474306">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2/0.0.1920.1053@0.0.1920.1053" timestamp="1581959351176" />
+    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2/0.0.1920.1053@0.0.1920.1053" timestamp="1582123474306" />
     <state x="185" y="90" width="1542" height="870" key="DiffContextDialog" timestamp="1580310323857">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
@@ -403,22 +401,22 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="740" y="284" width="430" height="482" key="FileChooserDialogImpl/0.0.1920.1053@0.0.1920.1053" timestamp="1582031467932" />
-    <state width="1878" height="173" key="GridCell.Tab.0.bottom" timestamp="1582122200043">
+    <state width="1878" height="70" key="GridCell.Tab.0.bottom" timestamp="1582125057599">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="173" key="GridCell.Tab.0.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1582122200043" />
-    <state width="1878" height="173" key="GridCell.Tab.0.center" timestamp="1582122200042">
+    <state width="1878" height="70" key="GridCell.Tab.0.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1582125057599" />
+    <state width="1878" height="70" key="GridCell.Tab.0.center" timestamp="1582125057598">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="173" key="GridCell.Tab.0.center/0.0.1920.1053@0.0.1920.1053" timestamp="1582122200042" />
-    <state width="1878" height="173" key="GridCell.Tab.0.left" timestamp="1582122200042">
+    <state width="1878" height="70" key="GridCell.Tab.0.center/0.0.1920.1053@0.0.1920.1053" timestamp="1582125057598" />
+    <state width="1878" height="70" key="GridCell.Tab.0.left" timestamp="1582125057598">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="173" key="GridCell.Tab.0.left/0.0.1920.1053@0.0.1920.1053" timestamp="1582122200042" />
-    <state width="1878" height="173" key="GridCell.Tab.0.right" timestamp="1582122200042">
+    <state width="1878" height="70" key="GridCell.Tab.0.left/0.0.1920.1053@0.0.1920.1053" timestamp="1582125057598" />
+    <state width="1878" height="70" key="GridCell.Tab.0.right" timestamp="1582125057599">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="173" key="GridCell.Tab.0.right/0.0.1920.1053@0.0.1920.1053" timestamp="1582122200042" />
+    <state width="1878" height="70" key="GridCell.Tab.0.right/0.0.1920.1053@0.0.1920.1053" timestamp="1582125057599" />
     <state width="1878" height="270" key="GridCell.Tab.1.bottom" timestamp="1582037781521">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
@@ -443,10 +441,10 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="464" y="162" key="SettingsEditor/0.0.1920.1053@0.0.1920.1053" timestamp="1580311494652" />
-    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2" timestamp="1581518877452">
+    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2" timestamp="1582123485522">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2/0.0.1920.1053@0.0.1920.1053" timestamp="1581518877452" />
+    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2/0.0.1920.1053@0.0.1920.1053" timestamp="1582123485522" />
     <state x="643" y="355" key="com.intellij.ide.util.TipDialog" timestamp="1580311394472">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>

@@ -33,7 +33,10 @@ class EmbodiedRobot(NewRobot):
         # Keep record of variance In a tuple of mean and amount of vanities checked
         self.variance = 0, 0
 
-    # ------------------------    Homeostatic Variables manipulation     ----------------------------------
+        # Take the ticks of the simulator at time of initiation
+        self.ticks = self.getTicks()
+
+# -------------------------------------- Homeostatic Variables manipulation --------------------------------------------
 
     # Set temp value to temp - delta
     def setTemp(self, deltaTemp):
@@ -55,10 +58,16 @@ class EmbodiedRobot(NewRobot):
     def setLibido(self, deltaLibido):
         self.libido -= deltaLibido
 
-    # -------------------------------- Error and Wellness calculations -----------------------------------
+# ------------------------------------------------------ System --------------------------------------------------------
+
+    # Calculate Life span from initial ticks - current ticks
+    def getLifeSpan(self):
+        return self.getTicks() - self.ticks
+
+# -------------------------------------------- Error and Wellness calculations -----------------------------------------
 
     # Take in value and limits and test the error / death
-    def calclError(self, testVar, lowLim=None, upLim=None):
+    def calcError(self, testVar, lowLim=None, upLim=None):
 
         # If two limits
         if upLim is not None and lowLim is not None:
@@ -115,14 +124,14 @@ class EmbodiedRobot(NewRobot):
             try:
 
                 # Calculate the error of the variable and add it to the total sum
-                errorSum += self.calclError(getattr(self, variables), lowLim, upLim)
+                errorSum += self.calcError(getattr(self, variables), lowLim, upLim)
 
             # If any of the error calc return a string (Ie Dead) Return viability 0
             except TypeError as exception:
 
                 return 0
 
-        # Return (a decimal) 1 - (sum of error / Max possible error)
+        # Return (a decimal to prevent floating point errors) 1 - (sum of error / Max possible error)
         return Decimal(1 - (errorSum / len(self.homeostaticList)))
 
     # Take a new Viability value return the mean of Viability and an increment count
