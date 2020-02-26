@@ -1458,8 +1458,14 @@ class GridRobotSim(tk.Tk):
                 elif msg[0] == "DG":
                     rmsg = self.nearest(msg[1], "Goal")
 
-                elif msg[0] == "TI":
+                elif msg[0] == "T":
                     rmsg = self.ticks
+
+                elif msg[0] == "M":
+                    rmsg = self.mapSize
+
+                elif msg[0] == "POS":
+                    rmsg = self.getXYpos(msg[1])
 
                 else:
                     rmsg = "Unknown command"
