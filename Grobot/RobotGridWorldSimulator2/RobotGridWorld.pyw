@@ -1467,6 +1467,9 @@ class GridRobotSim(tk.Tk):
                 elif msg[0] == "POS":
                     rmsg = self.getXYpos(msg[1])
 
+                elif msg[0] == "HEAD":
+                    rmsg = int(self.robots[msg[1]].heading())
+
                 else:
                     rmsg = "Unknown command"
 

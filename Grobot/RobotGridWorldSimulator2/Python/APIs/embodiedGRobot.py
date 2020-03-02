@@ -73,6 +73,11 @@ class EmbodiedRobot(NewRobot):
 
         self.libido -= deltaLibido
 
+    # Set stress value to stress - delta
+    def setStress(self, deltaStress):
+
+        self.stress -= deltaStress
+
     # Set glucose value to glucose - delta
     def setGlucose(self, deltaGlucose):
 
@@ -93,7 +98,7 @@ class EmbodiedRobot(NewRobot):
         painLow, painHigh = self.painThresh
 
         # If the pain value is less than half the max pain value
-        if painLow < self.pain < (painHigh / 2):
+        if 0 < self.pain < (painHigh / 2):
 
             # Decrease the stress by one step
             self.setStress(self.stressDeg)
@@ -108,7 +113,7 @@ class EmbodiedRobot(NewRobot):
         stressLow, stressHigh = self.stressThresh
 
         # If the stress value is less than half the max stress value
-        if stressLow < self.stress < (stressHigh / 2):
+        if 0 < self.stress < (stressHigh / 2):
 
             # Increase the libido
             self.setLibido(-self.libidoDeg)
@@ -273,16 +278,189 @@ class EmbodiedRobot(NewRobot):
 
         # Ask simulator for map size
 
+    # Ask sim for robots xy coords
     def getOwnXY(self):
         msg = self._send("POS " + self.rname + "")
         # print(msg)
         return eval(msg)
 
+    def getHeading(self):
+        msg = self._send("HEAD " + self.rname + "")
+        # print(msg)
+        return eval(msg)
+    # -------------------------------------- Additional Movement -------------------------------------------------------
+
+    def gotToCoord(self, targetX, targetY):
+
+
+        xCord , yCord = self.getOwnXY()
+        heading = self.getHeading()
+
+        while xCord != targetX:
+            xCord, yCord = self.getOwnXY()
+            heading = self.getHeading()
+
+            if xCord < targetX:
+
+                while heading != 0:
+                    self.right()
+                    heading = self.getHeading()
+
+                vision = self.look()
+                if vision[2] is not None:
+                    left, right = self.getFreeLook()
+
+                    while not left and not right:
+
+                        self.moveBack()
+                        left, right = self.getFreeLook()
+
+                    if yCord < targetY and left:
+                        self.left()
+                        self.gotToCoord(xCord, yCord + 1)
+
+                    elif yCord > targetY and right:
+                        self.right()
+                        self.gotToCoord(xCord, yCord - 1)
+
+                    elif left:
+                        self.left()
+                        self.gotToCoord(xCord, yCord - 1)
+
+                    else:
+                        self.right()
+                        self.gotToCoord(xCord, yCord + 1)
+                else:
+                    self.forward()
+
+            else:
+
+                while heading != 180:
+                    self.right()
+                    heading = self.getHeading()
+
+                vision = self.look()
+                if vision[2] is not None:
+                    left, right = self.getFreeLook()
+
+                    while not left and not right:
+
+                        self.moveBack()
+                        left, right = self.getFreeLook()
+
+                    if yCord < targetY and right:
+                        self.right()
+                        self.gotToCoord(xCord, yCord + 1)
+
+                    elif yCord > targetY and left:
+                        self.left()
+                        self.gotToCoord(xCord, yCord - 1)
+
+                    elif left:
+                        self.left()
+                        self.gotToCoord(xCord, yCord + 1)
+
+                    else:
+                        self.right()
+                        self.gotToCoord(xCord, yCord - 1)
+                else:
+                    self.forward()
+
+            xCord, yCord = self.getOwnXY()
+            heading = self.getHeading()
+
+        while yCord != targetY:
+
+            if yCord < targetY:
+
+                while heading != 90:
+                    self.right()
+                    heading = self.getHeading()
+
+                vision = self.look()
+                if vision[2] is not None:
+                    left, right = self.getFreeLook()
+
+                    while not left and not right:
+
+                        self.moveBack()
+                        left, right = self.getFreeLook()
+
+                    if xCord < targetX and left:
+                        self.left()
+                        self.gotToCoord(xCord - 1, yCord)
+
+                    elif xCord > targetX and right:
+                        self.right()
+                        self.gotToCoord(xCord + 1, yCord)
+
+                    elif left:
+                        self.left()
+                        self.gotToCoord(xCord - 1, yCord)
+
+                    else:
+                        self.right()
+                        self.gotToCoord(xCord + 1, yCord)
+                else:
+                    self.forward()
+
+            else:
+
+                while heading != 270:
+                    self.right()
+                    heading = self.getHeading()
+
+                vision = self.look()
+                if vision[2] is not None:
+                    left, right = self.getFreeLook()
+
+                    while not left and not right:
+
+                        self.moveBack()
+                        left, right = self.getFreeLook()
+
+                    if xCord < targetX and right:
+                        self.right()
+                        self.gotToCoord(xCord - 1, yCord)
+
+                    elif xCord > targetX and left:
+                        self.left()
+                        self.gotToCoord(xCord + 1, yCord)
+
+                    elif left:
+                        self.left()
+                        self.gotToCoord(xCord + 1, yCord)
+
+                    else:
+                        self.right()
+                        self.gotToCoord(xCord - 1, yCord)
+                else:
+                    self.forward()
+
+            xCord, yCord = self.getOwnXY()
+            heading = self.getHeading()
+
+        if xCord != targetX or yCord != targetY:
+            self.gotToCoord(targetX, targetY)
+
+    def moveBack(self):
+        self.right()
+        self.right()
+        self.forward()
+        self.right()
+        self.right()
+
+    def getFreeLook(self):
+        vision = self.look()
+
+        return vision[0] is None, vision[4] is None
+
+
 
 def demo():
     hank = EmbodiedRobot("hank", 0, 0)
     hank.updateDrives()
-
+    hank.gotToCoord(20,20)
 
 if __name__ == "__main__":
     demo()
