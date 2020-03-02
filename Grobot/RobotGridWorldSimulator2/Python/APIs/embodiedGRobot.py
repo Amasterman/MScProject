@@ -89,29 +89,48 @@ class EmbodiedRobot(NewRobot):
         self.setPain(self.painDeg)
 
         # Robot loses amounts based on other drive variables
+        # Get the threshold for pain
         painLow, painHigh = self.painThresh
+
+        # If the pain value is less than half the max pain value
         if painLow < self.pain < (painHigh / 2):
 
+            # Decrease the stress by one step
             self.setStress(self.stressDeg)
 
+        # If the pain value is more than half the max pain value
         else:
 
+            # Increase the stress
             self.setStress(-self.stressDeg)
 
+        # Get the stress threshold
         stressLow, stressHigh = self.stressThresh
+
+        # If the stress value is less than half the max stress value
         if stressLow < self.stress < (stressHigh / 2):
 
+            # Increase the libido
             self.setLibido(-self.libidoDeg)
 
+        # If the stress value is more than half the max stress value
         else:
 
+            # decrease the libido
             self.setLibido(self.libidoDeg)
 
         # Robot loses amounts based on world parameters
+
+        # Get the threshold values
         tempLow, tempHigh = self.tempThresh
+
+        # calculation to increase/decrease temp based on world temp
         self.setTemp(Decimal(tempHigh/2 - temperature) * self.tempDeg)
 
+        # Get the threshold values
         moistureLow, moistureHigh = self.moistureThresh
+
+        # calculation to increase/decrease moisture based on world humidity
         self.setMoisture(Decimal(moistureHigh/2 - humidity) * self.moistureDeg)
 
     # ------------------------------------------------------ System ----------------------------------------------------
