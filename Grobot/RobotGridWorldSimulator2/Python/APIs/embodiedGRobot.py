@@ -292,125 +292,209 @@ class EmbodiedRobot(NewRobot):
         return eval(msg)
     # -------------------------------------- Additional Movement -------------------------------------------------------
 
+    # Go to provided x y cords
     def gotToCoord(self, targetX, targetY):
 
+        # Get initial cords
         xCord, yCord = self.getOwnXY()
+
+        # While not at correct cords
         while xCord != targetX or yCord != targetY:
 
+            # while not at correct x cord
             while xCord != targetX:
 
+                # Move to target x cord
                 self.moveToX(xCord, targetX, targetY)
 
+                # Update coords
                 xCord, yCord = self.getOwnXY()
 
+            # While not at correct y cord
             while yCord != targetY:
 
+                # Move to target y cord
                 self.moveToY(yCord, targetX, targetY)
 
+                # Update cords
                 xCord, yCord = self.getOwnXY()
 
+    # Move to correct X cord
     def moveToX(self, xCord, targetX, targetY):
 
+        # Check if target x is left or right
         if xCord < targetX:
 
+            # If higher look left
             self.turnToHeading(0)
+
         else:
+
+            # If lower look right
             self.turnToHeading(180)
 
+        # Get vision
         vision = self.look()
 
+        # If not looking at nothing
         if vision[2] is not None:
 
+            # Check your left and right
             left, right = self.getFreeLook()
 
+            # Check if in dead end
             xCord, yCord, left, right = self.deadEnd(left, right)
 
+            # If not correct yCord
             if yCord != targetY:
 
+                # Try to move to target Y first
                 self.gotToCoord(xCord, targetY)
 
+            # If at correct yCord
             else:
 
+                # Follow wall
                 self.followWall(left, right)
+
+        # If clear forward
         else:
+
+            # Move forward
             self.forward()
 
+    # Move to correct y cord
     def moveToY(self, yCord, targetX, targetY):
+
+        # If y higher or lower face correct direction
         if yCord < targetY:
 
+            # If higher look up
             self.turnToHeading(90)
 
         else:
+
+            # If lower look down
             self.turnToHeading(270)
 
+        # Update vision
         vision = self.look()
+
+        # If facing nothing
         if vision[2] is not None:
+
+            # Check your left and right
             left, right = self.getFreeLook()
 
+            # Check if in dead end
             xCord, yCord, left, right = self.deadEnd(left, right)
 
+            # If not correct xCord
             if xCord != targetX:
+
+                # Try to move to target X first
                 self.gotToCoord(targetX, yCord)
+
+            # If at correct xCord
             else:
+
+                # Follow wall
                 self.followWall(left, right)
 
+        # If clear forward
         else:
+
+            # Move forward
             self.forward()
 
+    # Turn to target heading
     def turnToHeading(self, targetHeading):
+
+        # Get current heading
         heading = self.getHeading()
 
+        # If heading is not target
         while heading != targetHeading:
 
+            # If needs to turn around
             if abs(targetHeading - heading) == 180:
+                # Turn around
+                self.right()
                 self.right()
 
+            # If need to turn right
             elif heading - targetHeading == 90 or heading - targetHeading == -270:
+
+                # Turn right
                 self.right()
 
+            # If need to turn left
             elif heading - targetHeading == -90 or heading - targetHeading == 270:
+
+                # Turn left
                 self.left()
 
+            # Update heading
             heading = self.getHeading()
 
+    # Follow wall to left or right
     def followWall(self, left, right):
+
+        # Update look
         vision = self.look()
 
+        # If both left and right are clear choose one at random
         if left and right:
+
             if random.uniform(0, 1) == 1:
+
                 left = True
                 right = False
+
             else:
+
                 left = False
                 right = True
 
+        # If left is clear
         if left:
 
+            # Turn left move forward and turn right back
             while vision[2] is not None:
                 self.left()
                 self.forward()
                 self.right()
                 vision = self.look()
 
+        # If right is clear
         elif right:
 
+            # Turn right move forward and turn left back
             while vision[2] is not None:
                 self.right()
                 self.forward()
                 self.left()
                 vision = self.look()
 
+    # Check if in dead end and back up if are
     def deadEnd(self, left, right):
+
+        # If in a dead end
         while not left and not right:
 
+            # Move back
             self.moveBack()
+
+            # Update coords and check left and right
             xCord, yCord = self.getOwnXY()
             left, right = self.getFreeLook()
 
+        # Update and return new cords and left and right
         xCord, yCord = self.getOwnXY()
         left, right = self.getFreeLook()
         return xCord, yCord, left, right
 
+    # Turn around, move forward, then face original direction
     def moveBack(self):
         self.right()
         self.right()
@@ -418,11 +502,11 @@ class EmbodiedRobot(NewRobot):
         self.right()
         self.right()
 
+    # Check left and right
     def getFreeLook(self):
         vision = self.look()
 
         return vision[0] is None, vision[4] is None
-
 
 def demo():
     hank = EmbodiedRobot("hank", 0, 0)
