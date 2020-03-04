@@ -1,5 +1,7 @@
 from math import sqrt
 from decimal import *
+import random
+
 from grobot import *
 
 
@@ -292,156 +294,122 @@ class EmbodiedRobot(NewRobot):
 
     def gotToCoord(self, targetX, targetY):
 
+        xCord, yCord = self.getOwnXY()
+        while xCord != targetX or yCord != targetY:
 
-        xCord , yCord = self.getOwnXY()
+            while xCord != targetX:
+
+                self.moveToX(xCord, targetX, targetY)
+
+                xCord, yCord = self.getOwnXY()
+
+            while yCord != targetY:
+
+                self.moveToY(yCord, targetX, targetY)
+
+                xCord, yCord = self.getOwnXY()
+
+    def moveToX(self, xCord, targetX, targetY):
+
+        if xCord < targetX:
+
+            self.turnToHeading(0)
+        else:
+            self.turnToHeading(180)
+
+        vision = self.look()
+
+        if vision[2] is not None:
+
+            left, right = self.getFreeLook()
+
+            xCord, yCord, left, right = self.deadEnd(left, right)
+
+            if yCord != targetY:
+
+                self.gotToCoord(xCord, targetY)
+
+            else:
+
+                self.followWall(left, right)
+        else:
+            self.forward()
+
+    def moveToY(self, yCord, targetX, targetY):
+        if yCord < targetY:
+
+            self.turnToHeading(90)
+
+        else:
+            self.turnToHeading(270)
+
+        vision = self.look()
+        if vision[2] is not None:
+            left, right = self.getFreeLook()
+
+            xCord, yCord, left, right = self.deadEnd(left, right)
+
+            if xCord != targetX:
+                self.gotToCoord(targetX, yCord)
+            else:
+                self.followWall(left, right)
+
+        else:
+            self.forward()
+
+    def turnToHeading(self, targetHeading):
         heading = self.getHeading()
 
-        while xCord != targetX:
-            xCord, yCord = self.getOwnXY()
+        while heading != targetHeading:
+
+            if abs(targetHeading - heading) == 180:
+                self.right()
+
+            elif heading - targetHeading == 90 or heading - targetHeading == -270:
+                self.right()
+
+            elif heading - targetHeading == -90 or heading - targetHeading == 270:
+                self.left()
+
             heading = self.getHeading()
 
-            if xCord < targetX:
+    def followWall(self, left, right):
+        vision = self.look()
 
-                while heading != 0:
-                    self.right()
-                    heading = self.getHeading()
-
-                vision = self.look()
-                if vision[2] is not None:
-                    left, right = self.getFreeLook()
-
-                    while not left and not right:
-
-                        self.moveBack()
-                        left, right = self.getFreeLook()
-
-                    if yCord < targetY and left:
-                        self.left()
-                        self.gotToCoord(xCord, yCord + 1)
-
-                    elif yCord > targetY and right:
-                        self.right()
-                        self.gotToCoord(xCord, yCord - 1)
-
-                    elif left:
-                        self.left()
-                        self.gotToCoord(xCord, yCord - 1)
-
-                    else:
-                        self.right()
-                        self.gotToCoord(xCord, yCord + 1)
-                else:
-                    self.forward()
-
+        if left and right:
+            if random.uniform(0, 1) == 1:
+                left = True
+                right = False
             else:
+                left = False
+                right = True
 
-                while heading != 180:
-                    self.right()
-                    heading = self.getHeading()
+        if left:
 
+            while vision[2] is not None:
+                self.left()
+                self.forward()
+                self.right()
                 vision = self.look()
-                if vision[2] is not None:
-                    left, right = self.getFreeLook()
 
-                    while not left and not right:
+        elif right:
 
-                        self.moveBack()
-                        left, right = self.getFreeLook()
+            while vision[2] is not None:
+                self.right()
+                self.forward()
+                self.left()
+                vision = self.look()
 
-                    if yCord < targetY and right:
-                        self.right()
-                        self.gotToCoord(xCord, yCord + 1)
+    def deadEnd(self, left, right):
+        while not left and not right:
 
-                    elif yCord > targetY and left:
-                        self.left()
-                        self.gotToCoord(xCord, yCord - 1)
-
-                    elif left:
-                        self.left()
-                        self.gotToCoord(xCord, yCord + 1)
-
-                    else:
-                        self.right()
-                        self.gotToCoord(xCord, yCord - 1)
-                else:
-                    self.forward()
-
+            self.moveBack()
             xCord, yCord = self.getOwnXY()
-            heading = self.getHeading()
+            left, right = self.getFreeLook()
 
-        while yCord != targetY:
-
-            if yCord < targetY:
-
-                while heading != 90:
-                    self.right()
-                    heading = self.getHeading()
-
-                vision = self.look()
-                if vision[2] is not None:
-                    left, right = self.getFreeLook()
-
-                    while not left and not right:
-
-                        self.moveBack()
-                        left, right = self.getFreeLook()
-
-                    if xCord < targetX and left:
-                        self.left()
-                        self.gotToCoord(xCord - 1, yCord)
-
-                    elif xCord > targetX and right:
-                        self.right()
-                        self.gotToCoord(xCord + 1, yCord)
-
-                    elif left:
-                        self.left()
-                        self.gotToCoord(xCord - 1, yCord)
-
-                    else:
-                        self.right()
-                        self.gotToCoord(xCord + 1, yCord)
-                else:
-                    self.forward()
-
-            else:
-
-                while heading != 270:
-                    self.right()
-                    heading = self.getHeading()
-
-                vision = self.look()
-                if vision[2] is not None:
-                    left, right = self.getFreeLook()
-
-                    while not left and not right:
-
-                        self.moveBack()
-                        left, right = self.getFreeLook()
-
-                    if xCord < targetX and right:
-                        self.right()
-                        self.gotToCoord(xCord - 1, yCord)
-
-                    elif xCord > targetX and left:
-                        self.left()
-                        self.gotToCoord(xCord + 1, yCord)
-
-                    elif left:
-                        self.left()
-                        self.gotToCoord(xCord + 1, yCord)
-
-                    else:
-                        self.right()
-                        self.gotToCoord(xCord - 1, yCord)
-                else:
-                    self.forward()
-
-            xCord, yCord = self.getOwnXY()
-            heading = self.getHeading()
-
-        if xCord != targetX or yCord != targetY:
-            self.gotToCoord(targetX, targetY)
+        xCord, yCord = self.getOwnXY()
+        left, right = self.getFreeLook()
+        return xCord, yCord, left, right
 
     def moveBack(self):
         self.right()
@@ -454,7 +422,6 @@ class EmbodiedRobot(NewRobot):
         vision = self.look()
 
         return vision[0] is None, vision[4] is None
-
 
 
 def demo():

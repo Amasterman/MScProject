@@ -7,7 +7,6 @@
     <list default="true" id="6e96dec6-8d42-4a21-9fc7-d731c507b52a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -214,7 +213,8 @@
       <workItem from="1582726264182" duration="838000" />
       <workItem from="1582727653567" duration="4703000" />
       <workItem from="1583171241927" duration="647000" />
-      <workItem from="1583173362391" duration="5449000" />
+      <workItem from="1583173362391" duration="5497000" />
+      <workItem from="1583326868479" duration="7769000" />
     </task>
     <task id="LOCAL-00001" summary="Inital Test Commit">
       <created>1580310130169</created>
@@ -356,7 +356,14 @@
       <option name="project" value="LOCAL" />
       <updated>1583171876289</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Initail path to xy">
+      <created>1583178831247</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1583178831248</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -383,7 +390,8 @@
     <MESSAGE value="Slightly restructured file system&#10;added ticks to sim and robots&#10;added running mean, variability and standard deviation to embodiedGrobot API" />
     <MESSAGE value="Added tcp queeries for robot cords and map size&#10;Added general update for drive variables" />
     <MESSAGE value="Added more comments" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added more comments" />
+    <MESSAGE value="Initail path to xy" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initail path to xy" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="189" width="806" height="675" key="#Inspections" timestamp="1580311266164">
@@ -414,10 +422,10 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="705" y="386" width="506" height="280" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1053@0.0.1920.1053" timestamp="1580741940011" />
-    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2" timestamp="1583171876028">
+    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2" timestamp="1583178830952">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2/0.0.1920.1053@0.0.1920.1053" timestamp="1583171876028" />
+    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2/0.0.1920.1053@0.0.1920.1053" timestamp="1583178830952" />
     <state x="185" y="90" width="1542" height="870" key="DiffContextDialog" timestamp="1580310323857">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
@@ -426,38 +434,38 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="740" y="284" width="430" height="482" key="FileChooserDialogImpl/0.0.1920.1053@0.0.1920.1053" timestamp="1582031467932" />
-    <state width="939" height="197" key="GridCell.Tab.0.bottom" timestamp="1583178755968">
+    <state width="1878" height="270" key="GridCell.Tab.0.bottom" timestamp="1583335339104">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="939" height="197" key="GridCell.Tab.0.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1583178755968" />
-    <state width="939" height="197" key="GridCell.Tab.0.center" timestamp="1583178755968">
+    <state width="1878" height="270" key="GridCell.Tab.0.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1583335339104" />
+    <state width="1878" height="270" key="GridCell.Tab.0.center" timestamp="1583335339103">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="939" height="197" key="GridCell.Tab.0.center/0.0.1920.1053@0.0.1920.1053" timestamp="1583178755968" />
-    <state width="939" height="197" key="GridCell.Tab.0.left" timestamp="1583178755967">
+    <state width="1878" height="270" key="GridCell.Tab.0.center/0.0.1920.1053@0.0.1920.1053" timestamp="1583335339103" />
+    <state width="1878" height="270" key="GridCell.Tab.0.left" timestamp="1583335339103">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="939" height="197" key="GridCell.Tab.0.left/0.0.1920.1053@0.0.1920.1053" timestamp="1583178755967" />
-    <state width="939" height="197" key="GridCell.Tab.0.right" timestamp="1583178755968">
+    <state width="1878" height="270" key="GridCell.Tab.0.left/0.0.1920.1053@0.0.1920.1053" timestamp="1583335339103" />
+    <state width="1878" height="270" key="GridCell.Tab.0.right" timestamp="1583335339103">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="939" height="197" key="GridCell.Tab.0.right/0.0.1920.1053@0.0.1920.1053" timestamp="1583178755968" />
-    <state width="939" height="270" key="GridCell.Tab.1.bottom" timestamp="1583178741263">
+    <state width="1878" height="270" key="GridCell.Tab.0.right/0.0.1920.1053@0.0.1920.1053" timestamp="1583335339103" />
+    <state width="1878" height="270" key="GridCell.Tab.1.bottom" timestamp="1583335339817">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="939" height="270" key="GridCell.Tab.1.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1583178741263" />
-    <state width="939" height="270" key="GridCell.Tab.1.center" timestamp="1583178741262">
+    <state width="1878" height="270" key="GridCell.Tab.1.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1583335339817" />
+    <state width="1878" height="270" key="GridCell.Tab.1.center" timestamp="1583335339816">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="939" height="270" key="GridCell.Tab.1.center/0.0.1920.1053@0.0.1920.1053" timestamp="1583178741262" />
-    <state width="939" height="270" key="GridCell.Tab.1.left" timestamp="1583178741262">
+    <state width="1878" height="270" key="GridCell.Tab.1.center/0.0.1920.1053@0.0.1920.1053" timestamp="1583335339816" />
+    <state width="1878" height="270" key="GridCell.Tab.1.left" timestamp="1583335339815">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="939" height="270" key="GridCell.Tab.1.left/0.0.1920.1053@0.0.1920.1053" timestamp="1583178741262" />
-    <state width="939" height="270" key="GridCell.Tab.1.right" timestamp="1583178741262">
+    <state width="1878" height="270" key="GridCell.Tab.1.left/0.0.1920.1053@0.0.1920.1053" timestamp="1583335339815" />
+    <state width="1878" height="270" key="GridCell.Tab.1.right" timestamp="1583335339817">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="939" height="270" key="GridCell.Tab.1.right/0.0.1920.1053@0.0.1920.1053" timestamp="1583178741262" />
+    <state width="1878" height="270" key="GridCell.Tab.1.right/0.0.1920.1053@0.0.1920.1053" timestamp="1583335339817" />
     <state x="742" y="240" width="428" height="570" key="RollbackChangesDialog" timestamp="1580310302625">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
@@ -496,129 +504,19 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>312</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>317</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>314</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>310</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>343</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>345</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>381</line>
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>414</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>383</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>388</line>
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>392</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>396</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>402</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>400</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>394</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>390</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>321</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>325</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>329</line>
-          <option name="timeStamp" value="32" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>350</line>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>354</line>
-          <option name="timeStamp" value="34" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>358</line>
-          <option name="timeStamp" value="35" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>362</line>
-          <option name="timeStamp" value="36" />
+          <line>294</line>
+          <option name="timeStamp" value="77" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/MScProject2$RemoteControl.coverage" NAME="RemoteControl Coverage Results" MODIFIED="1581516634407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
-    <SUITE FILE_PATH="coverage/MScProject2$embodiedGRobot.coverage" NAME="embodiedGRobot Coverage Results" MODIFIED="1583178755957" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
+    <SUITE FILE_PATH="coverage/MScProject2$embodiedGRobot.coverage" NAME="embodiedGRobot Coverage Results" MODIFIED="1583335338953" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$navigate.coverage" NAME="navigate Coverage Results" MODIFIED="1580395327517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject2$Doctests_in_grobot.coverage" NAME="Doctests in grobot Coverage Results" MODIFIED="1581432279047" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1580753067225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
-    <SUITE FILE_PATH="coverage/MScProject2$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1583178741245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
+    <SUITE FILE_PATH="coverage/MScProject2$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1583333354886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
     <SUITE FILE_PATH="coverage/MScProject$simpleRC.coverage" NAME="simpleRC Coverage Results" MODIFIED="1580394394209" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$mazeSolve.coverage" NAME="mazeSolve Coverage Results" MODIFIED="1580395350625" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$RemoteControl.coverage" NAME="RemoteControl Coverage Results" MODIFIED="1580736302291" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
