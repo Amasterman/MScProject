@@ -1,6 +1,8 @@
+import csv
 from math import sqrt
 from decimal import *
 import random
+from pathlib import Path
 
 from grobot import *
 
@@ -26,7 +28,7 @@ class EmbodiedRobot(NewRobot):
         self.moistureThresh = 0, 1
         self.painThresh = None, 1
         self.stressThresh = None, 1
-        self.glucose = None, 1
+        self.glucoseThresh = None, 1
 
         # Standard degradation values for each variable that decays per tick
         self.energyDeg = Decimal(.01)
@@ -48,42 +50,45 @@ class EmbodiedRobot(NewRobot):
         # Take the ticks of the simulator at time of initiation
         self.ticks = self.getTicks()
 
+        # path for current file
+        self.filePath = self.createFile()
+
     # ---------------------------------- Homeostatic Variables manipulation --------------------------------------------
 
     # Set temp value to temp - delta
     def setTemp(self, deltaTemp):
 
-        self.temp -= deltaTemp
+        self.temp += deltaTemp
 
     # Set energy value to energy - delta
     def setEnergy(self, deltaEnergy):
 
-        self.energy -= deltaEnergy
+        self.energy += deltaEnergy
 
     # Set pain value to pain - delta
     def setPain(self, deltaPain):
 
-        self.pain -= deltaPain
+        self.pain += deltaPain
 
     # Set moisture value to moisture - delta
     def setMoisture(self, deltaMoisture):
 
-        self.moisture -= deltaMoisture
+        self.moisture += deltaMoisture
 
     # Set Libido value to libido - delta
     def setLibido(self, deltaLibido):
 
-        self.libido -= deltaLibido
+        self.libido += deltaLibido
 
     # Set stress value to stress - delta
     def setStress(self, deltaStress):
 
-        self.stress -= deltaStress
+        self.stress += deltaStress
 
     # Set glucose value to glucose - delta
     def setGlucose(self, deltaGlucose):
 
-        self.glucose -= deltaGlucose
+        self.glucose += deltaGlucose
 
     # Update values based on amount of ticks passed since last update
     def updateDrives(self):
@@ -92,39 +97,70 @@ class EmbodiedRobot(NewRobot):
         temperature, humidity = self.getTempAndHumidity(xCord, yCord)
 
         # Robot loses preset amounts per tick
-        self.setEnergy(self.energyDeg)
-        self.setPain(self.painDeg)
+        if 0 < self.energy < 1:
+            self.setEnergy(-self.energyDeg)
+        elif 0 > self.energy:
+            self.energy = 0
+        elif self.energy > 1:
+            self.energy = 1
+
+        if 0 < self.pain < 1:
+            self.setPain(-self.painDeg)
+        elif 0 > self.pain:
+            self.pain = 0
+        elif self.pain > 1:
+            self.pain = 1
 
         # Robot loses amounts based on other drive variables
         # Get the threshold for pain
         painLow, painHigh = self.painThresh
 
         # If the pain value is less than half the max pain value
-        if 0 < self.pain < (painHigh / 2):
+        if 0 <= self.pain < (painHigh / 2):
 
             # Decrease the stress by one step
-            self.setStress(self.stressDeg)
+            if 0 < self.stress < 1:
+                self.setStress(-self.stressDeg)
+            elif 0 > self.stress:
+                self.stress = 0
+            elif self.stress > 1:
+                self.stress = 1
 
         # If the pain value is more than half the max pain value
         else:
 
             # Increase the stress
-            self.setStress(-self.stressDeg)
+            if 0 < self.stress < 1:
+                self.setStress(self.stressDeg)
+            elif 0 > self.stress:
+                self.stress = 0
+            elif self.stress > 1:
+                self.stress = 1
 
         # Get the stress threshold
         stressLow, stressHigh = self.stressThresh
 
         # If the stress value is less than half the max stress value
-        if 0 < self.stress < (stressHigh / 2):
+        if 0 <= self.stress < (stressHigh / 2):
 
             # Increase the libido
-            self.setLibido(-self.libidoDeg)
+            if 0 < self.libido < 1:
+                self.setLibido(self.libidoDeg)
+            elif 0 > self.libido:
+                self.libido = 0
+            elif self.libido > 1:
+                self.libido = 1
 
         # If the stress value is more than half the max stress value
         else:
 
             # decrease the libido
-            self.setLibido(self.libidoDeg)
+            if 0 < self.libido < 1:
+                self.setLibido(-self.libidoDeg)
+            elif 0 > self.libido:
+                self.libido = 0
+            elif self.libido > 1:
+                self.libido = 1
 
         # Robot loses amounts based on world parameters
 
@@ -132,13 +168,25 @@ class EmbodiedRobot(NewRobot):
         tempLow, tempHigh = self.tempThresh
 
         # calculation to increase/decrease temp based on world temp
-        self.setTemp(Decimal(tempHigh/2 - temperature) * self.tempDeg)
+        if 0 < self.temp < 1:
+            self.setTemp(-(Decimal(tempHigh/2 - temperature) * self.tempDeg))
+        elif 0 > self.temp:
+            self.temp = 0
+        elif self.temp > 1:
+            self.temp = 1
 
         # Get the threshold values
         moistureLow, moistureHigh = self.moistureThresh
 
         # calculation to increase/decrease moisture based on world humidity
-        self.setMoisture(Decimal(moistureHigh/2 - humidity) * self.moistureDeg)
+        if 0 < self.moisture < 1:
+            self.setMoisture(-(Decimal(moistureHigh/2 - humidity) * self.moistureDeg))
+        elif 0 > self.moisture:
+            self.moisture = 0
+        elif self.moisture > 1:
+            self.moisture = 1
+
+        self.writeToFile()
 
     # ------------------------------------------------------ System ----------------------------------------------------
 
@@ -160,6 +208,48 @@ class EmbodiedRobot(NewRobot):
 
         return "Coords outside of map range"
 
+    def writeToFile(self):
+
+        # Calculate viability, mean viability, variance and standard deviation
+        currentViability = self.calcViability()
+        self.meanViability = self.calcMeanViability(currentViability)
+        meanViability, count = self.meanViability
+        self.variance = self.calcVariance(currentViability, meanViability)
+        currentVariance, varCount = self.variance
+        standardDev = self.calcStandardDeviation(currentVariance)
+
+        with open(self.filePath, mode='a') as csv_file:
+            fieldnames = ["lifeSpan", "viability", "meanViability", "currentVariance", "standardDeviation", "temp",
+                          "energy", "moisture", "pain", "stress", "libido", "glucose"]
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+            writer.writerow({"lifeSpan": self.getLifeSpan(), "viability" : currentViability, "meanViability":
+                            meanViability, "currentVariance": currentVariance, "standardDeviation": standardDev,
+                             "temp" : self.temp, "energy": self.energy, "moisture": self.energy, "pain": self.pain,
+                             "stress": self.stress, "libido": self.libido, "glucose": self.glucose})
+
+    def createFile(self):
+        created = False
+        count = 0
+        filePath = "/home/alex/PycharmProjects/MScProject2/Results"
+
+        while not created:
+            tempPath = Path(filePath + "/results" + str(count) + ".csv")
+            if tempPath.exists():
+                count += 1
+            else:
+                open(tempPath, "+w")
+                created = True
+
+        with open(tempPath, mode='a') as csv_file:
+            fieldnames = ["lifeSpan", "viability", "meanViability", "currentVariance", "standardDeviation", "temp",
+                          "energy", "moisture", "pain", "stress", "libido", "glucose"]
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+            writer.writeheader()
+
+        return tempPath
+
     # ---------------------------------------- Error and Wellness calculations -----------------------------------------
 
     # Take in value and limits and test the error / death
@@ -177,6 +267,7 @@ class EmbodiedRobot(NewRobot):
             # If passed value out of range
             else:
                 # Return dead
+                self.die()
                 return "Dead"
 
         # If no upper death limit
@@ -189,8 +280,9 @@ class EmbodiedRobot(NewRobot):
                 return abs(lowLim - testVar)
 
             # If passed value out of range
-            else:
+            elif lowLim >= testVar:
                 # Return dead
+                self.die()
                 return "Dead"
 
         # If no lower death limit
@@ -203,8 +295,9 @@ class EmbodiedRobot(NewRobot):
                 return abs(upLim - testVar)
 
             # If passed value out of range
-            else:
+            elif testVar >= upLim:
                 # Return dead
+                self.die()
                 return "Dead"
 
     # Take the sum of all error and compute viability
@@ -290,6 +383,11 @@ class EmbodiedRobot(NewRobot):
         msg = self._send("HEAD " + self.rname + "")
         # print(msg)
         return eval(msg)
+
+    def die(self):
+        msg = self._send("Die " + self.rname + "")
+        # print(msg)
+
     # -------------------------------------- Additional Movement -------------------------------------------------------
 
     # Go to provided x y cords
@@ -508,10 +606,22 @@ class EmbodiedRobot(NewRobot):
 
         return vision[0] is None, vision[4] is None
 
+    def left(self):
+        self.updateDrives()
+        NewRobot.left(self)
+
+    def right(self):
+        self.updateDrives()
+        NewRobot.right(self)
+
+    def forward(self):
+        self.updateDrives()
+        NewRobot.forward(self)
+
+
 def demo():
     hank = EmbodiedRobot("hank", 0, 0)
-    hank.updateDrives()
-    hank.gotToCoord(20,20)
+    hank.gotToCoord(29,29)
 
 if __name__ == "__main__":
     demo()

@@ -1470,6 +1470,10 @@ class GridRobotSim(tk.Tk):
                 elif msg[0] == "HEAD":
                     rmsg = int(self.robots[msg[1]].heading())
 
+                elif msg[0] == "Die":
+                    self.robotStates[msg[1]] = "Broken"
+                    self.robots[msg[1]].shape("circle")
+                    rmsg = self.robotStates[msg[1]]
                 else:
                     rmsg = "Unknown command"
 
