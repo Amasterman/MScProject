@@ -10,8 +10,11 @@ from grobot import *
 class EmbodiedRobot(NewRobot):
 
     def __init__(self, rname="anon", posx=1, posy=1, colour="red", rshape="None", temp=0.37, energy=0.5, moisture=0.5,
-                 pain=0, glucose=0, stress=0.5, libido=1):
+                 pain=0, glucose=0.5, stress=0.5, libido=1):
         NewRobot.__init__(self, rname, posx, posy, colour, rshape)
+
+        # Nest cords = start cords
+        self.nest = posx, posy
 
         # Homeostatic variables
         self.temp = Decimal(temp)
@@ -21,6 +24,7 @@ class EmbodiedRobot(NewRobot):
         self.stress = Decimal(stress)
         self.libido = Decimal(libido)
         self.glucose = Decimal(glucose)
+        self.damage = Decimal(0)
 
         # Homeostatic thresholds
         self.tempThresh = 0, 1
@@ -28,7 +32,8 @@ class EmbodiedRobot(NewRobot):
         self.moistureThresh = 0, 1
         self.painThresh = None, 1
         self.stressThresh = None, 1
-        self.glucoseThresh = None, 1
+        self.glucoseThresh = 0, 1
+        self.damageThresh = None, 1
 
         # Standard degradation values for each variable that decays per tick
         self.energyDeg = Decimal(.01)
@@ -37,9 +42,10 @@ class EmbodiedRobot(NewRobot):
         self.libidoDeg = Decimal(.01)
         self.tempDeg = Decimal(.01)
         self.stressDeg = Decimal(.01)
+        self.damageDeg = Decimal(.01)
 
         # List of the homeostatic variables that affect well being/viability
-        self.homeostaticList = ("temp", "energy", "moisture", "pain", "stress", "glucose")
+        self.homeostaticList = ("temp", "energy", "moisture", "pain", "stress", "glucose", "damage")
 
         # Keep record of mean viability In a tuple of mean and amount of vanities checked
         self.meanViability = 0, 0
@@ -89,6 +95,11 @@ class EmbodiedRobot(NewRobot):
     def setGlucose(self, deltaGlucose):
 
         self.glucose += deltaGlucose
+
+    # Set damage to value + delta
+    def setDamage(self, deltaDamage):
+
+        self.damage += deltaDamage
 
     # Update values based on amount of ticks passed since last update
     def updateDrives(self):
@@ -220,13 +231,14 @@ class EmbodiedRobot(NewRobot):
 
         with open(self.filePath, mode='a') as csv_file:
             fieldnames = ["lifeSpan", "viability", "meanViability", "currentVariance", "standardDeviation", "temp",
-                          "energy", "moisture", "pain", "stress", "libido", "glucose"]
+                          "energy", "moisture", "pain", "stress", "libido", "glucose", "damage"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
             writer.writerow({"lifeSpan": self.getLifeSpan(), "viability" : currentViability, "meanViability":
                             meanViability, "currentVariance": currentVariance, "standardDeviation": standardDev,
                              "temp" : self.temp, "energy": self.energy, "moisture": self.energy, "pain": self.pain,
-                             "stress": self.stress, "libido": self.libido, "glucose": self.glucose})
+                             "stress": self.stress, "libido": self.libido, "glucose": self.glucose,
+                             "damage": self.damage})
 
     def createFile(self):
         created = False
@@ -234,7 +246,7 @@ class EmbodiedRobot(NewRobot):
         filePath = "/home/alex/PycharmProjects/MScProject2/Results"
 
         while not created:
-            tempPath = Path(filePath + "/results" + str(count) + ".csv")
+            tempPath = Path(filePath + "/" + self.rname + "results" + str(count) + ".csv")
             if tempPath.exists():
                 count += 1
             else:
@@ -243,7 +255,7 @@ class EmbodiedRobot(NewRobot):
 
         with open(tempPath, mode='a') as csv_file:
             fieldnames = ["lifeSpan", "viability", "meanViability", "currentVariance", "standardDeviation", "temp",
-                          "energy", "moisture", "pain", "stress", "libido", "glucose"]
+                          "energy", "moisture", "pain", "stress", "libido", "glucose", "damage"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
             writer.writeheader()
@@ -387,6 +399,25 @@ class EmbodiedRobot(NewRobot):
     def die(self):
         msg = self._send("Die " + self.rname + "")
         # print(msg)
+
+    # -------------------------------------- Behaviors  ----------------------------------------------------------------
+
+    # -------------------------------------- Motivations ---------------------------------------------------------------
+
+    def motivationThirst(self):
+        lowLim, upLim = self.moistureThresh
+        error = abs(lowLim - self.moisture)
+        return error, "Inc", "Water"
+
+    def motivationHunger(self):
+        lowLim, upLim = self.glucoseThresh
+        error = abs(lowLim - self.glucose)
+        return error, "Inc", "Food"
+
+    def motivationFatigue(self):
+        lowLim, upLim = self.energyThresh
+        error = self.calcError(self.energy, lowLim, upLim)
+        return error, "Inc", "Nest"
 
     # -------------------------------------- Additional Movement -------------------------------------------------------
 
@@ -621,7 +652,7 @@ class EmbodiedRobot(NewRobot):
 
 def demo():
     hank = EmbodiedRobot("hank", 0, 0)
-    hank.gotToCoord(29,29)
+    hank.gotToCoord(20, 20)
 
 if __name__ == "__main__":
     demo()

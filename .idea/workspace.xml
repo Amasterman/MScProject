@@ -5,34 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e96dec6-8d42-4a21-9fc7-d731c507b52a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Results/.~lock.results8.csv#" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results10.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results11.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results12.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results13.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results14.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results15.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results16.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results17.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results18.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results19.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results2.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results3.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results4.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results5.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results6.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results7.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results8.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Results/results9.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/RemoteControl.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Results/results0.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/mazeSolve.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/navigate.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/simpleRC.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/.~lock.results8.csv#" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results0.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results1.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results10.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results11.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results12.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results13.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results14.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results15.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results16.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results17.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results18.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results19.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results2.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results3.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results4.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results5.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results6.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results7.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results8.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/results9.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -241,7 +236,8 @@
       <workItem from="1583171241927" duration="647000" />
       <workItem from="1583173362391" duration="5497000" />
       <workItem from="1583326868479" duration="9668000" />
-      <workItem from="1583776242522" duration="7543000" />
+      <workItem from="1583776242522" duration="7750000" />
+      <workItem from="1583931164854" duration="2698000" />
     </task>
     <task id="LOCAL-00001" summary="Inital Test Commit">
       <created>1580310130169</created>
@@ -404,7 +400,14 @@
       <option name="project" value="LOCAL" />
       <updated>1583337149821</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Added automotic results taking into a csv file&#10;Added automatic death if value exceeded threshold&#10;added new left right forward to update drives when used&#10;swapped sign for increase/decrease to make more sense">
+      <created>1583783794552</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1583783794552</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -450,10 +453,10 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="555" y="189" width="806" height="675" key="#Python/0.0.1920.1053@0.0.1920.1053" timestamp="1582121889229" />
-    <state x="553" y="188" width="806" height="675" key="#Updates" timestamp="1581950741740">
+    <state x="553" y="188" width="806" height="675" key="#Updates" timestamp="1583933292916">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state x="553" y="188" width="806" height="675" key="#Updates/0.0.1920.1053@0.0.1920.1053" timestamp="1581950741740" />
+    <state x="553" y="188" width="806" height="675" key="#Updates/0.0.1920.1053@0.0.1920.1053" timestamp="1583933292916" />
     <state x="694" y="333" width="528" height="386" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1580314286197">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
@@ -478,38 +481,38 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="740" y="284" width="430" height="482" key="FileChooserDialogImpl/0.0.1920.1053@0.0.1920.1053" timestamp="1582031467932" />
-    <state width="1878" height="197" key="GridCell.Tab.0.bottom" timestamp="1583783649317">
+    <state width="1878" height="197" key="GridCell.Tab.0.bottom" timestamp="1583933922477">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="197" key="GridCell.Tab.0.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1583783649317" />
-    <state width="1878" height="197" key="GridCell.Tab.0.center" timestamp="1583783649316">
+    <state width="1878" height="197" key="GridCell.Tab.0.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1583933922477" />
+    <state width="1878" height="197" key="GridCell.Tab.0.center" timestamp="1583933922476">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="197" key="GridCell.Tab.0.center/0.0.1920.1053@0.0.1920.1053" timestamp="1583783649316" />
-    <state width="1878" height="197" key="GridCell.Tab.0.left" timestamp="1583783649316">
+    <state width="1878" height="197" key="GridCell.Tab.0.center/0.0.1920.1053@0.0.1920.1053" timestamp="1583933922476" />
+    <state width="1878" height="197" key="GridCell.Tab.0.left" timestamp="1583933922476">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="197" key="GridCell.Tab.0.left/0.0.1920.1053@0.0.1920.1053" timestamp="1583783649316" />
-    <state width="1878" height="197" key="GridCell.Tab.0.right" timestamp="1583783649316">
+    <state width="1878" height="197" key="GridCell.Tab.0.left/0.0.1920.1053@0.0.1920.1053" timestamp="1583933922476" />
+    <state width="1878" height="197" key="GridCell.Tab.0.right" timestamp="1583933922477">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="197" key="GridCell.Tab.0.right/0.0.1920.1053@0.0.1920.1053" timestamp="1583783649316" />
-    <state width="1878" height="231" key="GridCell.Tab.1.bottom" timestamp="1583783572752">
+    <state width="1878" height="197" key="GridCell.Tab.0.right/0.0.1920.1053@0.0.1920.1053" timestamp="1583933922477" />
+    <state width="1878" height="231" key="GridCell.Tab.1.bottom" timestamp="1583783997275">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="231" key="GridCell.Tab.1.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1583783572752" />
-    <state width="1878" height="231" key="GridCell.Tab.1.center" timestamp="1583783572752">
+    <state width="1878" height="231" key="GridCell.Tab.1.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1583783997275" />
+    <state width="1878" height="231" key="GridCell.Tab.1.center" timestamp="1583783997274">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="231" key="GridCell.Tab.1.center/0.0.1920.1053@0.0.1920.1053" timestamp="1583783572752" />
-    <state width="1878" height="231" key="GridCell.Tab.1.left" timestamp="1583783572751">
+    <state width="1878" height="231" key="GridCell.Tab.1.center/0.0.1920.1053@0.0.1920.1053" timestamp="1583783997274" />
+    <state width="1878" height="231" key="GridCell.Tab.1.left" timestamp="1583783997274">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="231" key="GridCell.Tab.1.left/0.0.1920.1053@0.0.1920.1053" timestamp="1583783572751" />
-    <state width="1878" height="231" key="GridCell.Tab.1.right" timestamp="1583783572752">
+    <state width="1878" height="231" key="GridCell.Tab.1.left/0.0.1920.1053@0.0.1920.1053" timestamp="1583783997274" />
+    <state width="1878" height="231" key="GridCell.Tab.1.right" timestamp="1583783997274">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="231" key="GridCell.Tab.1.right/0.0.1920.1053@0.0.1920.1053" timestamp="1583783572752" />
+    <state width="1878" height="231" key="GridCell.Tab.1.right/0.0.1920.1053@0.0.1920.1053" timestamp="1583783997274" />
     <state x="742" y="240" width="428" height="570" key="RollbackChangesDialog" timestamp="1580310302625">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
@@ -518,10 +521,10 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="464" y="162" key="SettingsEditor/0.0.1920.1053@0.0.1920.1053" timestamp="1580311494652" />
-    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2" timestamp="1583337165047">
+    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2" timestamp="1583783807855">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2/0.0.1920.1053@0.0.1920.1053" timestamp="1583337165047" />
+    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2/0.0.1920.1053@0.0.1920.1053" timestamp="1583783807855" />
     <state x="643" y="355" key="com.intellij.ide.util.TipDialog" timestamp="1580311394472">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
@@ -548,7 +551,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py</url>
-          <line>386</line>
+          <line>397</line>
           <option name="timeStamp" value="105" />
         </line-breakpoint>
       </breakpoints>
@@ -556,11 +559,11 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/MScProject2$RemoteControl.coverage" NAME="RemoteControl Coverage Results" MODIFIED="1581516634407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
-    <SUITE FILE_PATH="coverage/MScProject2$embodiedGRobot.coverage" NAME="embodiedGRobot Coverage Results" MODIFIED="1583783649306" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
+    <SUITE FILE_PATH="coverage/MScProject2$embodiedGRobot.coverage" NAME="embodiedGRobot Coverage Results" MODIFIED="1583933922467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$navigate.coverage" NAME="navigate Coverage Results" MODIFIED="1580395327517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject2$Doctests_in_grobot.coverage" NAME="Doctests in grobot Coverage Results" MODIFIED="1581432279047" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1580753067225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
-    <SUITE FILE_PATH="coverage/MScProject2$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1583783572720" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
+    <SUITE FILE_PATH="coverage/MScProject2$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1583933863165" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
     <SUITE FILE_PATH="coverage/MScProject$simpleRC.coverage" NAME="simpleRC Coverage Results" MODIFIED="1580394394209" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$mazeSolve.coverage" NAME="mazeSolve Coverage Results" MODIFIED="1580395350625" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$RemoteControl.coverage" NAME="RemoteControl Coverage Results" MODIFIED="1580736302291" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
