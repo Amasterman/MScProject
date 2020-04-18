@@ -419,6 +419,38 @@ class EmbodiedRobot(NewRobot):
         error = self.calcError(self.energy, lowLim, upLim)
         return error, "Inc", "Nest"
 
+    def motivationConfusion(self):
+        lowLim, upLim = self.stressThresh
+        error = self.calcError(self.stress, lowLim, upLim)
+        return error, "Dec", "Nest"
+
+    def motivationExcitement(self):
+        lowLim, upLim = self.energyThresh
+        error = self.calcError(self.energy, lowLim, upLim)
+        return error, "Dec", "Enemy"
+
+    def motivationOverMoisture(self):
+        lowLim, upLim = self.moistureThresh
+        error = self.calcError(self.moisture, lowLim, upLim)
+        return error, "Dec", "None"
+
+    def motivationOverNutrition(self):
+        lowLim, upLim = self.glucoseThresh
+        error = self.calcError(self.glucose, lowLim, upLim)
+        return error, "Dec", "None"
+
+    def motivationRepair(self):
+        lowLim, upLim = self.damageThresh
+        error = self.calcError(self.damage, lowLim, upLim)
+        return error, "Dec", "Nest"
+
+    def motivationSelfProtection(self):
+        lowLim, upLim = self.painThresh
+        error = self.calcError(self.pain, lowLim, upLim)
+        return error, "Dec", "Enemy"
+
+
+
     # -------------------------------------- Additional Movement -------------------------------------------------------
 
     # Go to provided x y cords
