@@ -402,6 +402,10 @@ class EmbodiedRobot(NewRobot):
 
     # -------------------------------------- Behaviors  ----------------------------------------------------------------
 
+    def behaviorNest(self):
+        nestx, nesty = self.nest()
+        self.gotToCoord(nestx, nesty)
+
     # -------------------------------------- Motivations ---------------------------------------------------------------
 
     def motivationThirst(self):
@@ -448,8 +452,6 @@ class EmbodiedRobot(NewRobot):
         lowLim, upLim = self.painThresh
         error = self.calcError(self.pain, lowLim, upLim)
         return error, "Dec", "Enemy"
-
-
 
     # -------------------------------------- Additional Movement -------------------------------------------------------
 
