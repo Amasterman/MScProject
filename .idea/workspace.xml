@@ -5,24 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e96dec6-8d42-4a21-9fc7-d731c507b52a" name="Default Changelist" comment="Added a lot">
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/Basic Test.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/HighFood.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/LowFood.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/LowFoodCold.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/NormalFood.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/NormalFoodCold.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/Enemy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/BehaviorASM.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/VotingAsm.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/WinnerTakesAll.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/grobot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/grobot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Results/hankresults0.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Results/hankresults1.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -266,6 +250,7 @@
       <workItem from="1597304180595" duration="9088000" />
       <workItem from="1597662593513" duration="606000" />
       <workItem from="1597748612663" duration="2920000" />
+      <workItem from="1598518415115" duration="272000" />
     </task>
     <task id="LOCAL-00001" summary="Inital Test Commit">
       <created>1580310130169</created>
@@ -456,7 +441,14 @@
       <option name="project" value="LOCAL" />
       <updated>1594299620696</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Added a lot">
+      <created>1598518424979</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1598518424979</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -508,10 +500,10 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="695" y="333" width="526" height="386" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1053@0.0.1920.1053" timestamp="1596111505594" />
-    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2" timestamp="1594299671502">
+    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2" timestamp="1598518546795">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2/0.0.1920.1053@0.0.1920.1053" timestamp="1594299671502" />
+    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2/0.0.1920.1053@0.0.1920.1053" timestamp="1598518546795" />
     <state x="97" y="99" width="1726" height="857" key="DiffContextDialog" timestamp="1595580682169">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
@@ -552,18 +544,18 @@
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state width="1878" height="137" key="GridCell.Tab.1.right/0.0.1920.1053@0.0.1920.1053" timestamp="1596708870781" />
-    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2" timestamp="1594299719230">
+    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2" timestamp="1598518450251">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2/0.0.1920.1053@0.0.1920.1053" timestamp="1594299719230" />
+    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2/0.0.1920.1053@0.0.1920.1053" timestamp="1598518450251" />
     <state width="963" height="528" key="XDebugger.FullValuePopup" timestamp="1596708516039">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state width="963" height="528" key="XDebugger.FullValuePopup/0.0.1920.1053@0.0.1920.1053" timestamp="1596708516039" />
-    <state x="748" y="447" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1594299609713">
+    <state x="748" y="447" width="419" height="158" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1598518434333">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state x="748" y="447" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1053@0.0.1920.1053" timestamp="1594299609713" />
+    <state x="748" y="447" width="419" height="158" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1053@0.0.1920.1053" timestamp="1598518434333" />
     <state x="508" y="266" width="899" height="520" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1595582521141">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
