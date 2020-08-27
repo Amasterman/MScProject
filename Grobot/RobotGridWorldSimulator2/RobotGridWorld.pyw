@@ -1003,8 +1003,12 @@ class GridRobotSim(tk.Tk):
         while nearest is None:
 
             # For each iteration move the start coords to the bottom right
-            if (x - 1 > 0) and (y - 1 > 0):
-                x, y = x - 1, y - 1
+            if x > 0:
+                x = x - 1
+
+            elif y > 0:
+                y = y - 1
+
             else:
                 x, y = 0, 0
 
@@ -1013,7 +1017,7 @@ class GridRobotSim(tk.Tk):
                 for j in range(0, dist):
 
                     # Check if square is in world size
-                    if 0 <= (x + i) <= self.mapSize and 0 <= (y + i) <= self.mapSize:
+                    if -1 < (x + i) < self.mapSize + 1 and -1 < (y + j) < self.mapSize + 1:
 
                         # Check if square is target
                         print(x + i, y + j)
@@ -1023,13 +1027,13 @@ class GridRobotSim(tk.Tk):
                         if j == y or j == dist - 1:
 
                             # If an instance of a target is found set found true
-                            if self.world[x + i][j] == target:
+                            if self.world[x + i][y + j] == target:
                                 found = True
 
                         elif i == x or i == dist - 1:
 
                             # If an instance of a target is found set found true
-                            if self.world[i][y + j] == target:
+                            if self.world[x + i][y + j] == target:
                                 found = True
 
                         if found:
@@ -1040,11 +1044,13 @@ class GridRobotSim(tk.Tk):
                                 # If its norm vector distance is smaller set as new nearest
                                 if numpy.linalg.norm(nearest) > numpy.linalg.norm([x + i, y + j]):
                                     nearest = x + i - 1, y + j - 1
+                                    found = False
 
                             else:
 
                                 # Save coords as nearest
                                 nearest = x + i - 1, y + j - 1
+                                found = False
 
             # if x and y hit both edges and haven't been found return not found
             if (x == 0 and x + dist > self.mapSize) and (y == 0 and y + dist > self.mapSize):
@@ -1457,6 +1463,12 @@ class GridRobotSim(tk.Tk):
 
                 elif msg[0] == "DG":
                     rmsg = self.nearest(msg[1], "Goal")
+
+                elif msg[0] == "DM":
+                    rmsg = self.nearest(msg[1], "Drone0")
+
+                elif msg[0] == "DE":
+                    rmsg = self.nearest(msg[1], "Enemy")
 
                 elif msg[0] == "T":
                     rmsg = self.ticks

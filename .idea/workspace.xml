@@ -4,9 +4,25 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e96dec6-8d42-4a21-9fc7-d731c507b52a" name="Default Changelist" comment="">
+    <list default="true" id="6e96dec6-8d42-4a21-9fc7-d731c507b52a" name="Default Changelist" comment="Added a lot">
+      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/Basic Test.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/HighFood.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/LowFood.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/LowFoodCold.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/NormalFood.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Maps/NormalFoodCold.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/Enemy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/BehaviorASM.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/VotingAsm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/WinnerTakesAll.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/embodiedGRobot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/grobot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/grobot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" beforeDir="false" afterPath="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/hankresults0.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/hankresults1.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,18 +59,21 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../untitled" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <property name="run.code.analysis.last.selected.profile" value="aDefault" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples" />
       <recent name="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs" />
+      <recent name="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.RobotGridWorld.pyw">
-    <configuration name="RemoteControl" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.VotingAsm">
+    <configuration name="BehaviorASM" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="MScProject" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -67,7 +86,29 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/RemoteControl.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/BehaviorASM.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Enemy" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="MScProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/Enemy.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -98,7 +139,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="embodiedGRobot" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="VotingAsm" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="MScProject" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -107,6 +148,28 @@
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/VotingAsm.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="embodiedGRobot" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="MScProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -120,54 +183,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="mazeSolve" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="MScProject" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/Examples/mazeSolve.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Doctests in grobot" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
-      <module name="MScProject" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs/grobot.py" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.VotingAsm" />
+        <item itemvalue="Python.Enemy" />
         <item itemvalue="Python.RobotGridWorld.pyw" />
+        <item itemvalue="Python.BehaviorASM" />
         <item itemvalue="Python.embodiedGRobot" />
-        <item itemvalue="Python.RemoteControl" />
-        <item itemvalue="Python tests.Doctests in grobot" />
-        <item itemvalue="Python.mazeSolve" />
       </list>
     </recent_temporary>
   </component>
@@ -221,7 +243,29 @@
       <workItem from="1587229767724" duration="2961000" />
       <workItem from="1587839982359" duration="588000" />
       <workItem from="1593782677021" duration="2647000" />
-      <workItem from="1594299221714" duration="389000" />
+      <workItem from="1594299221714" duration="1098000" />
+      <workItem from="1594719137041" duration="4611000" />
+      <workItem from="1595239302203" duration="14345000" />
+      <workItem from="1595579136827" duration="1434000" />
+      <workItem from="1595580587279" duration="5596000" />
+      <workItem from="1595923857378" duration="2512000" />
+      <workItem from="1595927922029" duration="8000" />
+      <workItem from="1595928011910" duration="6616000" />
+      <workItem from="1596007116457" duration="5295000" />
+      <workItem from="1596013942341" duration="638000" />
+      <workItem from="1596015409059" duration="3206000" />
+      <workItem from="1596096187153" duration="4226000" />
+      <workItem from="1596101201807" duration="9556000" />
+      <workItem from="1596533765923" duration="48000" />
+      <workItem from="1596533936066" duration="4141000" />
+      <workItem from="1596617149400" duration="8576000" />
+      <workItem from="1596704466271" duration="4738000" />
+      <workItem from="1597132163562" duration="9837000" />
+      <workItem from="1597222539459" duration="1987000" />
+      <workItem from="1597240621146" duration="1548000" />
+      <workItem from="1597304180595" duration="9088000" />
+      <workItem from="1597662593513" duration="606000" />
+      <workItem from="1597748612663" duration="2920000" />
     </task>
     <task id="LOCAL-00001" summary="Inital Test Commit">
       <created>1580310130169</created>
@@ -405,7 +449,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587230261913</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Added a lot">
+      <created>1594299620696</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1594299620696</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -413,7 +464,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Inital Test Commit" />
     <MESSAGE value="Amended README.md" />
     <MESSAGE value="Added Grobot simulator files to repo" />
     <MESSAGE value="Installed correct modules for Grobot and cleaned up slight code instances" />
@@ -438,46 +488,156 @@
     <MESSAGE value="Added automotic results taking into a csv file&#10;Added automatic death if value exceeded threshold&#10;added new left right forward to update drives when used&#10;swapped sign for increase/decrease to make more sense" />
     <MESSAGE value="Began adding movivations&#10;added name of robot to start of results files&#10;added damage homeostatic variable" />
     <MESSAGE value="Added more motivations" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added more motivations" />
+    <MESSAGE value="Added a lot" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a lot" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2" timestamp="1587230261645">
+    <state x="555" y="189" width="806" height="675" key="#Inspections" timestamp="1595242104938">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2/0.0.1920.1053@0.0.1920.1053" timestamp="1587230261645" />
+    <state x="555" y="189" width="806" height="675" key="#Inspections/0.0.1920.1053@0.0.1920.1053" timestamp="1595242104938" />
+    <state x="555" y="189" width="806" height="675" key="#Notifications" timestamp="1596111815692">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state x="555" y="189" width="806" height="675" key="#Notifications/0.0.1920.1053@0.0.1920.1053" timestamp="1596111815692" />
+    <state x="553" y="188" width="806" height="675" key="#Updates" timestamp="1595926356906">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state x="553" y="188" width="806" height="675" key="#Updates/0.0.1920.1053@0.0.1920.1053" timestamp="1595926356906" />
+    <state x="695" y="333" width="526" height="386" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1596111505594">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state x="695" y="333" width="526" height="386" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1053@0.0.1920.1053" timestamp="1596111505594" />
+    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2" timestamp="1594299671502">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state x="807" y="179" width="796" height="797" key="CommitChangelistDialog2/0.0.1920.1053@0.0.1920.1053" timestamp="1594299671502" />
+    <state x="97" y="99" width="1726" height="857" key="DiffContextDialog" timestamp="1595580682169">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state x="97" y="99" width="1726" height="857" key="DiffContextDialog/0.0.1920.1053@0.0.1920.1053" timestamp="1595580682169" />
     <state x="743" y="285" width="430" height="482" key="FileChooserDialogImpl" timestamp="1593782703047">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="743" y="285" width="430" height="482" key="FileChooserDialogImpl/0.0.1920.1053@0.0.1920.1053" timestamp="1593782703047" />
-    <state width="1878" height="197" key="GridCell.Tab.0.bottom" timestamp="1593787616550">
+    <state width="1878" height="159" key="GridCell.Tab.0.bottom" timestamp="1597314993373">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="197" key="GridCell.Tab.0.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1593787616550" />
-    <state width="1878" height="197" key="GridCell.Tab.0.center" timestamp="1593787616550">
+    <state width="1878" height="159" key="GridCell.Tab.0.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1597314993373" />
+    <state width="1878" height="159" key="GridCell.Tab.0.center" timestamp="1597314993372">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="197" key="GridCell.Tab.0.center/0.0.1920.1053@0.0.1920.1053" timestamp="1593787616550" />
-    <state width="1878" height="197" key="GridCell.Tab.0.left" timestamp="1593787616549">
+    <state width="1878" height="159" key="GridCell.Tab.0.center/0.0.1920.1053@0.0.1920.1053" timestamp="1597314993372" />
+    <state width="1878" height="159" key="GridCell.Tab.0.left" timestamp="1597314993372">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="197" key="GridCell.Tab.0.left/0.0.1920.1053@0.0.1920.1053" timestamp="1593787616549" />
-    <state width="1878" height="197" key="GridCell.Tab.0.right" timestamp="1593787616550">
+    <state width="1878" height="159" key="GridCell.Tab.0.left/0.0.1920.1053@0.0.1920.1053" timestamp="1597314993372" />
+    <state width="1878" height="159" key="GridCell.Tab.0.right" timestamp="1597314993372">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
-    <state width="1878" height="197" key="GridCell.Tab.0.right/0.0.1920.1053@0.0.1920.1053" timestamp="1593787616550" />
+    <state width="1878" height="159" key="GridCell.Tab.0.right/0.0.1920.1053@0.0.1920.1053" timestamp="1597314993372" />
+    <state width="1878" height="137" key="GridCell.Tab.1.bottom" timestamp="1596708870781">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state width="1878" height="137" key="GridCell.Tab.1.bottom/0.0.1920.1053@0.0.1920.1053" timestamp="1596708870781" />
+    <state width="1878" height="137" key="GridCell.Tab.1.center" timestamp="1596708870780">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state width="1878" height="137" key="GridCell.Tab.1.center/0.0.1920.1053@0.0.1920.1053" timestamp="1596708870780" />
+    <state width="1878" height="137" key="GridCell.Tab.1.left" timestamp="1596708870780">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state width="1878" height="137" key="GridCell.Tab.1.left/0.0.1920.1053@0.0.1920.1053" timestamp="1596708870780" />
+    <state width="1878" height="137" key="GridCell.Tab.1.right" timestamp="1596708870781">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state width="1878" height="137" key="GridCell.Tab.1.right/0.0.1920.1053@0.0.1920.1053" timestamp="1596708870781" />
+    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2" timestamp="1594299719230">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state x="555" y="263" width="806" height="526" key="Vcs.Push.Dialog.v2/0.0.1920.1053@0.0.1920.1053" timestamp="1594299719230" />
+    <state width="963" height="528" key="XDebugger.FullValuePopup" timestamp="1596708516039">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state width="963" height="528" key="XDebugger.FullValuePopup/0.0.1920.1053@0.0.1920.1053" timestamp="1596708516039" />
     <state x="748" y="447" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1594299609713">
       <screen x="0" y="0" width="1920" height="1053" />
     </state>
     <state x="748" y="447" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1053@0.0.1920.1053" timestamp="1594299609713" />
+    <state x="508" y="266" width="899" height="520" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1595582521141">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state x="508" y="266" width="899" height="520" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1053@0.0.1920.1053" timestamp="1595582521141" />
+    <state x="623" y="232" width="672" height="678" key="search.everywhere.popup" timestamp="1596626317124">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state x="623" y="232" width="672" height="678" key="search.everywhere.popup/0.0.1920.1053@0.0.1920.1053" timestamp="1596626317124" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/WinnerTakesAll.py</url>
+          <line>76</line>
+          <option name="timeStamp" value="163" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw</url>
+          <line>1470</line>
+          <option name="timeStamp" value="175" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw</url>
+          <line>1056</line>
+          <option name="timeStamp" value="177" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/RobotGridWorld.pyw</url>
+          <line>1061</line>
+          <option name="timeStamp" value="178" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/VotingAsm.py</url>
+          <line>171</line>
+          <option name="timeStamp" value="184" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/VotingAsm.py</url>
+          <line>173</line>
+          <option name="timeStamp" value="185" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/VotingAsm.py</url>
+          <line>178</line>
+          <option name="timeStamp" value="186" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/VotingAsm.py</url>
+          <line>176</line>
+          <option name="timeStamp" value="187" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/MScProject2$RemoteControl.coverage" NAME="RemoteControl Coverage Results" MODIFIED="1581516634407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
-    <SUITE FILE_PATH="coverage/MScProject2$embodiedGRobot.coverage" NAME="embodiedGRobot Coverage Results" MODIFIED="1593782782914" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
+    <SUITE FILE_PATH="coverage/MScProject2$Enemy.coverage" NAME="Enemy Coverage Results" MODIFIED="1597314889520" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$navigate.coverage" NAME="navigate Coverage Results" MODIFIED="1580395327517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject2$Doctests_in_grobot.coverage" NAME="Doctests in grobot Coverage Results" MODIFIED="1581432279047" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
-    <SUITE FILE_PATH="coverage/MScProject$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1580753067225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
-    <SUITE FILE_PATH="coverage/MScProject2$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1593785281908" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
+    <SUITE FILE_PATH="coverage/MScProject2$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1597314880082" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
+    <SUITE FILE_PATH="coverage/MScProject2$VotingAsm.coverage" NAME="VotingAsm Coverage Results" MODIFIED="1597314895280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$simpleRC.coverage" NAME="simpleRC Coverage Results" MODIFIED="1580394394209" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
+    <SUITE FILE_PATH="coverage/MScProject2$RemoteControl.coverage" NAME="RemoteControl Coverage Results" MODIFIED="1581516634407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
+    <SUITE FILE_PATH="coverage/MScProject2$WinnerTakesAll.coverage" NAME="WinnerTakesAll Coverage Results" MODIFIED="1597132861569" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
+    <SUITE FILE_PATH="coverage/MScProject2$embodiedGRobot.coverage" NAME="embodiedGRobot Coverage Results" MODIFIED="1597308249487" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python/APIs" />
+    <SUITE FILE_PATH="coverage/MScProject$RobotGridWorld_pyw.coverage" NAME="RobotGridWorld.pyw Coverage Results" MODIFIED="1580753067225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2" />
+    <SUITE FILE_PATH="coverage/MScProject2$BehaviorASM.coverage" NAME="BehaviorASM Coverage Results" MODIFIED="1597314229527" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$mazeSolve.coverage" NAME="mazeSolve Coverage Results" MODIFIED="1580395350625" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
     <SUITE FILE_PATH="coverage/MScProject$RemoteControl.coverage" NAME="RemoteControl Coverage Results" MODIFIED="1580736302291" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grobot/RobotGridWorldSimulator2/Python" />
   </component>

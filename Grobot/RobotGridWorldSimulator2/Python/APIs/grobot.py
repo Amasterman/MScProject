@@ -172,85 +172,91 @@ You can also display this guide by using Python's interactive help function:
 """
 # Python 2 and 3 compatibility
 from __future__ import absolute_import, division, print_function
+
 try:
-      input=raw_input # Python 3 style input()
+    input = raw_input  # Python 3 style input()
 except:
-      pass
+    pass
 
 import socket
 from time import sleep
 import atexit
 import sys
 
-hostname="localhost" # Set to Tutors PC IP address to shown on Projector etc?
-port = 9001          # Possibility of various clients running own robots
-                     # in the simulator in future?
+hostname = "localhost"  # Set to Tutors PC IP address to shown on Projector etc?
+port = 9001  # Possibility of various clients running own robots
+
+
+# in the simulator in future?
 
 
 class NewRobot():
 
     def __init__(self, rname="anon", posx=1, posy=1, colour="red", rshape="None"):
-        self.rname=rname
-        self.posx=posx
-        self.posy=posy
-        self.colour=colour
-        self.rshape=rshape
-        msg = "N "+str(rname)+" "+str(posx)+" "+str(posy)+" "+colour+" "+rshape
-        #print(msg)
+        self.rname = rname
+        self.posx = posx
+        self.posy = posy
+        self.colour = colour
+        self.rshape = rshape
+        msg = "N " + str(rname) + " " + str(posx) + " " + str(posy) + " " + colour + " " + rshape
+        # print(msg)
         self._send(msg)
-        #atexit.register(self.tcpSock.close)
-        #atexit.register(self.tcpSock.shutdown, 1)
+        # atexit.register(self.tcpSock.close)
+        # atexit.register(self.tcpSock.shutdown, 1)
 
     def _send(self, msg):
         # Send message and get respose from Simulator
         try:
             # The simulator IP is on localhost, maybe to remote PC later?
-            if type(msg)==str:
-                #self.tcpSock.setblocking(0)
-                self.tcpSock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            if type(msg) == str:
+                # self.tcpSock.setblocking(0)
+                self.tcpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 # Repeated runs can sometimes hang up here, because
                 # the socket hasn't been released by the kernel
                 # So this tells the socket to reuse the old one if it exists
                 self.tcpSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                self.tcpSock.connect ((hostname, port))# (hostname,portno))
+                self.tcpSock.connect((hostname, port))  # (hostname,portno))
                 self.tcpSock.send(msg.encode('utf-8'))
 
-                tries=1
-                rmsg=""
-                while rmsg=="" and tries > 0:
+                tries = 1
+                rmsg = ""
+                while rmsg == "" and tries > 0:
                     rmsg = rmsg + self.tcpSock.recv(100).decode('utf-8')
-                    if rmsg!="":tries -= 1
+                    if rmsg != "":
+                        tries -= 1
                 self.tcpSock.close()
             else:
                 rmsg = "msg type error"
-            if rmsg == "": rmsg = "Warning: Receieved Data error"
+            if rmsg == "":
+                rmsg = "Warning: Receieved Data error"
         except:
             print("Cannot connect to simulator")
             print("Please make sure Simulator is running")
             exit()
 
-        #self.tcpSock.shutdown(socket.SHUT_RDWR)
-        #self.tcpSock.close()
-        #print(rmsg)# Debug
+        # self.tcpSock.shutdown(socket.SHUT_RDWR)
+        # self.tcpSock.close()
+        # print(rmsg)# Debug
         return rmsg
 
     def init(self, xpos=1, ypos=1):
-        self.xpos=xpos
-        self.ypos=ypos
-        return self._send("N " + self.rname+" "+str(self.xpos)+" "+str(self.ypos)+" "+self.colour+" "+ self.rshape)
+        self.xpos = xpos
+        self.ypos = ypos
+        return self._send(
+            "N " + self.rname + " " + str(self.xpos) + " " + str(self.ypos) + " " + self.colour + " " + self.rshape)
 
     def right(self):
-        return self._send("R " + self.rname+" ")
+        return self._send("R " + self.rname + " ")
 
     def left(self):
-        return self._send("L " + self.rname+" ")
+        return self._send("L " + self.rname + " ")
 
     def look(self):
-        
+
         ##return 
-         #eval(
+        # eval(
         msg = self._send("S " + self.rname)
-        print(msg)
+        #print(msg)
         return eval(msg)
 
     def forward(self):
@@ -279,67 +285,105 @@ class NewRobot():
     def nearest(self, type):
 
         if type == "Food":
-            return self._send("DF " + self.rname)
+            try:
+                return tuple(map(int, self._send("DF " + self.rname)[1:-1].split(",")))
+
+            except:
+
+                return "Not Found"
 
         elif type == "Water":
-            return self._send("DWT " + self.rname)
+            try:
+                tuple(map(int, self._send("DWT " + self.rname)[1:-1].split(",")))
+                return tuple(map(int, self._send("DWT " + self.rname)[1:-1].split(",")))
+
+            except:
+
+                return "Not Found"
 
         elif type == "Goal":
-            return self._send("DG " + self.rname)
+            try:
+                return tuple(map(int, self._send("DG " + self.rname)[1:-1].split(",")))
+
+            except:
+
+                return "Not Found"
 
         elif type == "Wall":
-            return self._send("DW " + self.rname)
+
+            try:
+                return tuple(map(int, self._send("DW " + self.rname)[1:-1].split(",")))
+
+            except:
+
+                return "Not Found"
+
+        elif type == "Mate":
+            try:
+                return tuple(map(int, self._send("DM " + self.rname)[1:-1].split(",")))
+
+            except:
+
+                return "Not Found"
+
+        elif type == "Enemy":
+            try:
+                return tuple(map(int, self._send("DE " + self.rname)[1:-1].split(",")))
+
+            except:
+
+                return "Not Found"
+
 
         else:
             return "Type not known"
 
 
-
-
-
 def demo():
     # print() used to show return value from method/function calls
-    fred=NewRobot("fred", 1, 1)
-    bill=NewRobot("bill", 1, 1, "green")
+    fred = NewRobot("fred", 1, 1)
+    bill = NewRobot("bill", 1, 1, "green")
     print("Fred forward", fred.forward())
-    print("Bill forward",bill.forward())
+    print("Bill forward", bill.forward())
     print("Fred right", fred.right())
     print("Bill right", bill.right())
-    #fred.init(7,7)
+    # fred.init(7,7)
     count = 12
     while count > 0:
-        #print(count)
+        # print(count)
         print("Fred looks at:", fred.look())
-        print("Fred forward",fred.forward())
+        print("Fred forward", fred.forward())
         print("Bill looks at:", bill.look())
-        print ("Bill forward",bill.forward())
+        print("Bill forward", bill.forward())
         count -= 1
     print("Fred looks forward at", fred.look()[2])
     print("Bill looks forward at", bill.look()[2])
 
+
 def demo2():
-    arthur=NewRobot("arthur", 1, 4, "blue")
-    ted=NewRobot("ted", 4, 4, "yellow")
+    arthur = NewRobot("arthur", 1, 4, "blue")
+    ted = NewRobot("ted", 4, 4, "yellow")
     print("Arthur forward", arthur.forward())
-    print("Ted forward",ted.forward())
+    print("Ted forward", ted.forward())
     print("Arthur right", arthur.right())
     print("Ted right", ted.right())
     count = 12
     while count > 0:
-        #print(count)
+        # print(count)
         print("Arthur looks at: ", arthur.look())
-        print("Arthur forward",arthur.forward())
+        print("Arthur forward", arthur.forward())
         print("Ted looks at:", ted.look())
-        print ("Ted forward",ted.forward())
+        print("Ted forward", ted.forward())
         count -= 1
     print("Arthur looks at:", arthur.look())
     print("ted looks at:", ted.look())
+
 
 def demo3():
     arthur = NewRobot("arthur", 1, 4, "blue")
     print("Arthur Place: ", arthur.place("Food"))
 
+
 if __name__ == "__main__":
     demo3()
     print("Finished")
-

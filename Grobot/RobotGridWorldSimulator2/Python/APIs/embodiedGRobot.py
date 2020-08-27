@@ -1,16 +1,17 @@
 import csv
+import math
 from math import sqrt
 from decimal import *
 import random
 from pathlib import Path
 
-from grobot import *
+from Grobot.RobotGridWorldSimulator2.Python.APIs.grobot import NewRobot
 
 
 class EmbodiedRobot(NewRobot):
 
-    def __init__(self, rname="anon", posx=1, posy=1, colour="red", rshape="None", temp=0.37, energy=0.5, moisture=0.5,
-                 pain=0, glucose=0.5, stress=0.5, libido=1):
+    def __init__(self, rname="anon", posx=1, posy=1, colour="red", rshape="None", temp=0.5, energy=1, moisture=0.5,
+                 pain=0, glucose=0.5, stress=0.2, libido=0):
         NewRobot.__init__(self, rname, posx, posy, colour, rshape)
 
         # Nest cords = start cords
@@ -38,14 +39,18 @@ class EmbodiedRobot(NewRobot):
         # Standard degradation values for each variable that decays per tick
         self.energyDeg = Decimal(.01)
         self.painDeg = Decimal(.01)
-        self.moistureDeg = Decimal(.01)
+        self.moistureDeg = Decimal(.005)
         self.libidoDeg = Decimal(.01)
-        self.tempDeg = Decimal(.01)
+        self.tempDeg = Decimal(.005)
         self.stressDeg = Decimal(.01)
         self.damageDeg = Decimal(.01)
+        self.glucoseDeg = Decimal(0.005)
 
         # List of the homeostatic variables that affect well being/viability
         self.homeostaticList = ("temp", "energy", "moisture", "pain", "stress", "glucose", "damage")
+
+        # Viablility with libido
+        self.libidoViability = 0
 
         # Keep record of mean viability In a tuple of mean and amount of vanities checked
         self.meanViability = 0, 0
@@ -59,63 +64,67 @@ class EmbodiedRobot(NewRobot):
         # path for current file
         self.filePath = self.createFile()
 
+        # Amount of times mated
+        self.mateCount = 0
+
     # ---------------------------------- Homeostatic Variables manipulation --------------------------------------------
 
     # Set temp value to temp - delta
     def setTemp(self, deltaTemp):
 
-        self.temp += deltaTemp
+        self.temp += Decimal(deltaTemp)
 
     # Set energy value to energy - delta
     def setEnergy(self, deltaEnergy):
 
-        self.energy += deltaEnergy
+        self.energy += Decimal(deltaEnergy)
 
     # Set pain value to pain - delta
     def setPain(self, deltaPain):
 
-        self.pain += deltaPain
+        self.pain += Decimal(deltaPain)
 
     # Set moisture value to moisture - delta
     def setMoisture(self, deltaMoisture):
 
-        self.moisture += deltaMoisture
+        self.moisture += Decimal(deltaMoisture)
 
     # Set Libido value to libido - delta
     def setLibido(self, deltaLibido):
 
-        self.libido += deltaLibido
+        self.libido += Decimal(deltaLibido)
 
     # Set stress value to stress - delta
     def setStress(self, deltaStress):
 
-        self.stress += deltaStress
+        self.stress += Decimal(deltaStress)
 
     # Set glucose value to glucose - delta
     def setGlucose(self, deltaGlucose):
 
-        self.glucose += deltaGlucose
+        self.glucose += Decimal(deltaGlucose)
 
     # Set damage to value + delta
     def setDamage(self, deltaDamage):
 
-        self.damage += deltaDamage
+        self.damage += Decimal(deltaDamage)
 
     # Update values based on amount of ticks passed since last update
     def updateDrives(self):
 
+        look = self.look()
         xCord, yCord = self.getOwnXY()
         temperature, humidity = self.getTempAndHumidity(xCord, yCord)
 
         # Robot loses preset amounts per tick
-        if 0 < self.energy < 1:
+        if 0 < self.energy <= 1:
             self.setEnergy(-self.energyDeg)
         elif 0 > self.energy:
             self.energy = 0
         elif self.energy > 1:
             self.energy = 1
 
-        if 0 < self.pain < 1:
+        if 0 < self.pain <= 1:
             self.setPain(-self.painDeg)
         elif 0 > self.pain:
             self.pain = 0
@@ -141,7 +150,7 @@ class EmbodiedRobot(NewRobot):
         else:
 
             # Increase the stress
-            if 0 < self.stress < 1:
+            if 0 < self.stress <= 1:
                 self.setStress(self.stressDeg)
             elif 0 > self.stress:
                 self.stress = 0
@@ -155,7 +164,7 @@ class EmbodiedRobot(NewRobot):
         if 0 <= self.stress < (stressHigh / 2):
 
             # Increase the libido
-            if 0 < self.libido < 1:
+            if 0 <= self.libido <= 1:
                 self.setLibido(self.libidoDeg)
             elif 0 > self.libido:
                 self.libido = 0
@@ -166,7 +175,7 @@ class EmbodiedRobot(NewRobot):
         else:
 
             # decrease the libido
-            if 0 < self.libido < 1:
+            if 0 < self.libido <= 1:
                 self.setLibido(-self.libidoDeg)
             elif 0 > self.libido:
                 self.libido = 0
@@ -179,32 +188,47 @@ class EmbodiedRobot(NewRobot):
         tempLow, tempHigh = self.tempThresh
 
         # calculation to increase/decrease temp based on world temp
-        if 0 < self.temp < 1:
-            self.setTemp(-(Decimal(tempHigh/2 - temperature) * self.tempDeg))
+        if 0 < self.temp <= 1:
+            self.setTemp(-(temperature * self.tempDeg))
         elif 0 > self.temp:
             self.temp = 0
         elif self.temp > 1:
             self.temp = 1
 
+        if 0.55 <= self.temp or self.temp <= 0.45:
+            self.setPain(0.012)
+
         # Get the threshold values
         moistureLow, moistureHigh = self.moistureThresh
 
         # calculation to increase/decrease moisture based on world humidity
-        if 0 < self.moisture < 1:
-            self.setMoisture(-(Decimal(moistureHigh/2 - humidity) * self.moistureDeg))
+        if 0 < self.moisture <= 1:
+            self.setMoisture(-self.moistureDeg)
         elif 0 > self.moisture:
             self.moisture = 0
         elif self.moisture > 1:
             self.moisture = 1
 
+        # If in nest Decrease Stress and pain
+        nestX, nestY = self.nest
+        if xCord == nestX and yCord == nestY:
+            self.stress = self.stress - self.stressDeg * 2
+            self.pain = self.pain - self.painDeg * 2
+
+        if 0 < self.glucose <= 1:
+            self.setGlucose(-self.glucoseDeg)
+            self.setEnergy(self.glucoseDeg)
+        elif 0 > self.glucose:
+            self.glucose = 0
+        elif self.glucose > 1:
+            self.glucose = 1
+
+        if "enemy" in look:
+            self.setPain(0.1)
+
         self.writeToFile()
 
     # ------------------------------------------------------ System ----------------------------------------------------
-
-    # Calculate Life span from initial ticks - current ticks
-    def getLifeSpan(self):
-
-        return self.getTicks() - self.ticks
 
     # Return two values for heat and humidity based on x and y cords low = cold and moist, high = dry and hot
     def getTempAndHumidity(self, xCord, yCord):
@@ -215,7 +239,9 @@ class EmbodiedRobot(NewRobot):
         if (0 <= xCord <= mapSize) and (0 <= yCord <= mapSize):
 
             # temp , moisture
-            return (xCord / mapSize), (yCord / mapSize)
+            # print((xCord - math.ceil(mapSize/2))/10000)
+
+            return Decimal((xCord - math.ceil(mapSize / 2)) / 10000), Decimal((yCord - math.ceil(mapSize / 2)) / 10000)
 
         return "Coords outside of map range"
 
@@ -228,17 +254,20 @@ class EmbodiedRobot(NewRobot):
         self.variance = self.calcVariance(currentViability, meanViability)
         currentVariance, varCount = self.variance
         standardDev = self.calcStandardDeviation(currentVariance)
+        self.libidoViability = currentViability + self.calcError(self.libido)
 
         with open(self.filePath, mode='a') as csv_file:
-            fieldnames = ["lifeSpan", "viability", "meanViability", "currentVariance", "standardDeviation", "temp",
-                          "energy", "moisture", "pain", "stress", "libido", "glucose", "damage"]
+            fieldnames = ["lifeSpan", "viability", "meanViability", "currentVariance", "standardDeviation",
+                          "libidoViability", "temp",
+                          "energy", "moisture", "pain", "stress", "libido", "glucose", "damage", "mateCount"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
-            writer.writerow({"lifeSpan": self.getLifeSpan(), "viability" : currentViability, "meanViability":
-                            meanViability, "currentVariance": currentVariance, "standardDeviation": standardDev,
-                             "temp" : self.temp, "energy": self.energy, "moisture": self.energy, "pain": self.pain,
+            writer.writerow({"lifeSpan": self.getLifeSpan(), "viability": currentViability, "meanViability":
+                meanViability, "currentVariance": currentVariance, "standardDeviation": standardDev,
+                             "libidoViability": self.libidoViability,
+                             "temp": self.temp, "energy": self.energy, "moisture": self.moisture, "pain": self.pain,
                              "stress": self.stress, "libido": self.libido, "glucose": self.glucose,
-                             "damage": self.damage})
+                             "damage": self.damage, "mateCount": self.mateCount})
 
     def createFile(self):
         created = False
@@ -254,15 +283,67 @@ class EmbodiedRobot(NewRobot):
                 created = True
 
         with open(tempPath, mode='a') as csv_file:
-            fieldnames = ["lifeSpan", "viability", "meanViability", "currentVariance", "standardDeviation", "temp",
-                          "energy", "moisture", "pain", "stress", "libido", "glucose", "damage"]
+            fieldnames = ["lifeSpan", "viability", "meanViability", "currentVariance", "standardDeviation",
+                          "libidoViability", "temp",
+                          "energy", "moisture", "pain", "stress", "libido", "glucose", "damage", "mateCount"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
             writer.writeheader()
 
         return tempPath
 
+    def getMoveSide(self, coordX, coordY, startX, startY):
+
+        if abs(coordX - startX) >= abs(coordY - startY):
+
+            # Y is closer
+            if abs((coordY + 1) - startY) > abs((coordY - 1) - startY):
+
+                return coordX, coordY - 1
+
+            else:
+
+                return coordX, coordY + 1
+
+        else:
+
+            # X is closer
+            if abs((coordX + 1) - startX) > abs((coordX - 1) - startX):
+
+                return coordX - 1, coordY
+
+            else:
+
+                return coordX + 1, coordY
+
+    def faceTarget(self, target):
+
+        sight = self.look()
+        for i in range(0, 4):
+
+            if sight[2] != target:
+
+                if sight[0] == target:
+
+                    self.left()
+
+                else:
+
+                    self.right()
+            sight = self.look()
+
+    def consumeResource(self):
+        look = self.look()
+        if look[2] is not None:
+            if random.randint(0, 9) == 0:
+                self.pick()
+
     # ---------------------------------------- Error and Wellness calculations -----------------------------------------
+
+    # Calculate Life span from initial ticks - current ticks
+    def getLifeSpan(self):
+
+        return self.getTicks() - self.ticks
 
     # Take in value and limits and test the error / death
     def calcError(self, testVar, lowLim=None, upLim=None):
@@ -274,43 +355,48 @@ class EmbodiedRobot(NewRobot):
             if lowLim < testVar < upLim:
 
                 # Return the maximum difference between the absolute differences
-                return max(abs(lowLim - testVar), abs(upLim - testVar))
+                return abs(testVar - Decimal(0.75))
+                # return max(abs(lowLim - testVar), abs(upLim - testVar))
 
             # If passed value out of range
             else:
                 # Return dead
                 self.die()
-                return "Dead"
+                return "Dead" + str(testVar)
 
         # If no upper death limit
-        elif upLim is None:
+        elif upLim is None and lowLim is not None:
 
             # If passed value is within the limit
             if lowLim < testVar:
 
                 # Return the absolute difference
-                return abs(lowLim - testVar)
+                return abs(1 - testVar)
 
             # If passed value out of range
             elif lowLim >= testVar:
                 # Return dead
                 self.die()
-                return "Dead"
+                return "Dead" + str(testVar)
 
         # If no lower death limit
-        else:
+        elif lowLim is None and upLim is not None:
 
             # If passed value is within the limit
             if testVar < upLim:
 
                 # Return the absolute difference
-                return abs(upLim - testVar)
+                return abs(0 - testVar)
 
             # If passed value out of range
             elif testVar >= upLim:
                 # Return dead
                 self.die()
-                return "Dead"
+                return "Dead" + str(testVar)
+
+        else:
+
+            return abs(testVar - 0)
 
     # Take the sum of all error and compute viability
     def calcViability(self):
@@ -403,25 +489,135 @@ class EmbodiedRobot(NewRobot):
     # -------------------------------------- Behaviors  ----------------------------------------------------------------
 
     def behaviorNest(self):
-        nestx, nesty = self.nest()
-        self.gotToCoord(nestx, nesty)
+
+        targetX, targetY = self.nest
+        self.gotToCoord(targetX, targetY)
+        self.updateDrives()
+
+    def behaviorEat(self):
+        look = self.look()
+
+        if look[2] != "Food":
+
+            if not isinstance(self.nearest("Food"), str):
+
+                foodX, foodY = self.nearest("Food")
+                selfX, selfY = self.getOwnXY()
+                targetX, targetY = self.getMoveSide(foodX, foodY, selfX, selfY)
+                self.gotToCoord(targetX, targetY)
+                self.faceTarget("Food")
+
+        self.consumeResource()
+        self.setGlucose(.2)
+        self.setEnergy(0.05)
+        self.setMoisture(0.01)
+        self.setStress(-0.05)
+
+    def behaviorDrink(self):
+        look = self.look()
+
+        if look[2] != "Water":
+
+            if not isinstance(self.nearest("Water"), str):
+
+                waterX, waterY = self.nearest("Water")
+                selfX, selfY = self.getOwnXY()
+                targetX, targetY = self.getMoveSide(waterX, waterY, selfX, selfY)
+                self.gotToCoord(targetX, targetY)
+                self.faceTarget("Water")
+
+        self.consumeResource()
+
+        self.setMoisture(0.2)
+        self.setGlucose(0.01)
+        self.setStress(-0.05)
+        self.setTemp(-0.05)
+
+    def behaviorMate(self):
+
+        look = self.look()
+        while look[2] != "Drone0":
+
+            if not isinstance(self.nearest("Mate"), str):
+                try:
+                    startMateX, startMateY = self.nearest("Mate")
+                    selfX, selfY = self.getOwnXY()
+                    targetX, targetY = self.getMoveSide(startMateX, startMateY, selfX, selfY)
+                    self.gotToCoord(targetX, targetY)
+                    self.faceTarget("Drone0")
+
+                except:
+
+                    pass
+
+            look = self.look()
+
+        self.libido = 0
+        self.setStress(-0.1)
+        self.setEnergy(-0.05)
+        self.setMoisture(-0.05)
+
+        self.mateCount += 1
+
+    def behaviorFlee(self):
+
+        # Is this the best way to do this?
+        self.left()
+        self.left()
+        self.forward()
+        self.behaviorNest()
+        self.setPain(-0.1)
+        self.setStress(0.1)
+
+    def behaviorEnergyConversion(self):
+        if 0 < self.glucose <= 1:
+            self.setGlucose(-0.1)
+            self.setEnergy(0.075)
+
+    def behaviorSweat(self):
+        if 0 < self.moisture <= 1:
+            self.setMoisture(-0.2)
+            self.setEnergy(-0.01)
+            self.temp = Decimal(0.5)
 
     # -------------------------------------- Motivations ---------------------------------------------------------------
 
+    def motivationManager(self, target):
+        if target == "Thirst":
+            return self.motivationThirst()
+        elif target == "Hunger":
+            return self.motivationHunger()
+        elif target == "Fatigue":
+            return self.motivationFatigue()
+        elif target == "Confusion":
+            return self.motivationConfusion()
+        elif target == "Excitement":
+            return self.motivationExcitement()
+        elif target == "OverMoisture":
+            return self.motivationOverMoisture()
+        elif target == "OverNutrition":
+            return self.motivationOverNutrition()
+        elif target == "Repair":
+            return self.motivationRepair()
+        elif target == "SelfProtection":
+            return self.motivationSelfProtection()
+        elif target == "Libido":
+            return self.motivationLibido()
+
     def motivationThirst(self):
         lowLim, upLim = self.moistureThresh
-        error = abs(lowLim - self.moisture)
-        return error, "Inc", "Water"
+        error = self.calcError(self.moisture, lowLim, upLim)
+        return error, "Inc", "Drink"
 
     def motivationHunger(self):
         lowLim, upLim = self.glucoseThresh
-        error = abs(lowLim - self.glucose)
-        return error, "Inc", "Food"
+        error = self.calcError(self.glucose, lowLim, upLim)
+        return error, "Inc", "Eat"
 
     def motivationFatigue(self):
         lowLim, upLim = self.energyThresh
         error = self.calcError(self.energy, lowLim, upLim)
-        return error, "Inc", "Nest"
+        return error, "Inc", "EnergyConversion"
 
     def motivationConfusion(self):
         lowLim, upLim = self.stressThresh
@@ -436,12 +632,12 @@ class EmbodiedRobot(NewRobot):
     def motivationOverMoisture(self):
         lowLim, upLim = self.moistureThresh
         error = self.calcError(self.moisture, lowLim, upLim)
-        return error, "Dec", "None"
+        return error, "Dec", "Sweat"
 
     def motivationOverNutrition(self):
         lowLim, upLim = self.glucoseThresh
         error = self.calcError(self.glucose, lowLim, upLim)
-        return error, "Dec", "None"
+        return error, "Dec", "EnergyConversion"
 
     def motivationRepair(self):
         lowLim, upLim = self.damageThresh
@@ -451,7 +647,12 @@ class EmbodiedRobot(NewRobot):
     def motivationSelfProtection(self):
         lowLim, upLim = self.painThresh
         error = self.calcError(self.pain, lowLim, upLim)
-        return error, "Dec", "Enemy"
+        return error, "Dec", "Flee"
+
+    def motivationLibido(self):
+        lowLim, upLim = None, None
+        error = self.calcError(self.libido, lowLim, upLim)
+        return error, "Dec", "Mate"
 
     # -------------------------------------- Additional Movement -------------------------------------------------------
 
@@ -683,10 +884,17 @@ class EmbodiedRobot(NewRobot):
         self.updateDrives()
         NewRobot.forward(self)
 
+    def look(self):
+        self.writeToFile()
+        return NewRobot.look(self)
+
 
 def demo():
+    bill = NewRobot("Bill", 1, 1)
+    bill.gotoCoord(20, 20)
     hank = EmbodiedRobot("hank", 0, 0)
     hank.gotToCoord(20, 20)
+
 
 if __name__ == "__main__":
     demo()
